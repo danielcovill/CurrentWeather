@@ -1,0 +1,10 @@
+{
+    "application_title": {
+      "message": "Current Weather",
+      "description": "The title of the application, displayed in the web store."
+    },
+    "application_description": {
+      "message": "Chrome extension that shows the current time and weather",
+      "description": "The description of the application, displayed in the web store."
+    }
+}

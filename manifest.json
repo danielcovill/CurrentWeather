@@ -1,0 +1,15 @@
+{
+    "name": "CurrentWeather",
+    "version": "0.1",
+    "description": "Chrome extension that shows the current time and weather",
+    "chrome_url_overrides": {
+        "newtab": "app/index.html"
+    },
+    "default_locale": "en",
+    "author": "Dan Covill",
+    "permissions": [ 
+        "storage",
+        "geolocation"
+    ],
+    "manifest_version": 2
+}
