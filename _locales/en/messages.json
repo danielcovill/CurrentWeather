@@ -6,5 +6,78 @@
     "application_description": {
       "message": "Chrome extension that shows the current time and weather",
       "description": "The description of the application, displayed in the web store."
+    },
+    "error_localization_user_denied": {
+      "message": "User denied the request for Geolocation.",
+      "description": "The user denied permission for the application to use Geolocation"
+    },
+    "error_localization_location_unavailable": {
+      "message": "Location information is unavailable at this time.",
+      "description": "The application isn't currently able to get location information."
+    },
+    "error_localization_timeout": {
+      "message": "System timed out while seeking location information.",
+      "description": "The application request for location information exceeded the wait time limit."
+    },
+    "error_localization_generic": {
+      "message": "An unknown error occurred while attempting to gather location information.",
+      "description": "The application request for location information failed for an unknown reason."
+    },
+    "sun": {
+      "message": "Sunday"
+    },
+    "mon": {
+      "message": "Monday"
+    },
+    "tue": {
+      "message": "Tuesday"
+    },
+    "wed": {
+      "message": "Wednesday"
+    },
+    "thu": {
+      "message": "Thursday"
+    },
+    "fri": {
+      "message": "Friday"
+    },
+    "sat": {
+      "message": "Saturday"
+    },
+    "jan": {
+      "message": "January"
+    },
+    "feb": {
+      "message": "February"
+    },
+    "mar": {
+      "message": "March"
+    },
+    "apr": {
+      "message": "April"
+    },
+    "may": {
+      "message": "May"
+    },
+    "jun": {
+      "message": "June"
+    },
+    "jul": {
+      "message": "July"
+    },
+    "aug": {
+      "message": "August"
+    },
+    "sep": {
+      "message": "September"
+    },
+    "oct": {
+      "message": "October"
+    },
+    "nov": {
+      "message": "November"
+    },
+    "dec": {
+      "message": "December"
     }
 }
