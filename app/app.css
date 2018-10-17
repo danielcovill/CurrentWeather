@@ -26,6 +26,12 @@ body {
     font-family: "OpenSansRegular";
     font-weight: normal;
 }
+body.dark {
+    color: #EEE;
+}
+body.light {
+    color: #333;
+}
 .content {
     text-align: center;
 }

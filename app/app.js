@@ -1,16 +1,20 @@
-let userSettings = {
-    clockVersion: "12",
-    location: "auto",
-    dateFormat: "",
-    backgroundColor: "#0099ff",
-    fontColor: "#000000"
-};
+import OpenWeatherMap from "./owm-weather.js";
+
+let userSettings = {};
 let coords = null;
 
-//fixme once settings installed
-//pullUserSettings(); 
-setDisplayPreferences();
-refreshDate();
+// Check if it's their first time running the app (or if their settings were nuked)
+// and set them up with defaults if necessary
+chrome.storage.sync.get(['initialized'], (result) => {
+    if(!!result) {
+        setDefaultUserSettings();
+    }
+});
+
+// Get their settings out of storage (which refreshes views)
+pullUserSettings(); 
+
+// Set in motion regular checks to update the clock and the weather
 let clockTick = setInterval(refreshTime, 1000);
 let weatherTick = setInterval(refreshWeather, 60000);
 
@@ -20,39 +24,76 @@ function displayError(message) {
 
 function setDisplayPreferences() {
     document.body.style.backgroundColor = userSettings.backgroundColor;
-    document.body.style.color= userSettings.fontColor;
+
+    // Based on the background color, pick light or dark text
+    let bodyrgb = window.getComputedStyle(document.body).backgroundColor
+    let bodyrgbvals = bodyrgb.slice(4,bodyrgb.length-1).split(',');
+    let backgroundIsDark = (1 - (0.299 * bodyrgbvals[0] + 0.587 * bodyrgbvals[1] + 0.114 * bodyrgbvals[2]) / 255) > .5;
+    if(backgroundIsDark) {
+        document.body.classList.remove("light");
+        document.body.classList.add("dark");
+    } else {
+        document.body.classList.remove("dark");
+        document.body.classList.add("light");
+    }
 }
 
 function refreshWeather() {
-    if(coords == null) {
-        //display wait spinner
-        if(userSettings.location == "auto") {
-            navigator.geolocation.getCurrentPosition((position) => {
-                coords = position.coords.latitude.toString() + ", " + position.coords.longitude.toString();
-                // hide wait spinner
-                // call weather API
-                document.getElementsByClassName("coords")[0].innerHTML = coords;
-            }, (err) => {
-                //hide wait spinner
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        displayError(chrome.i18n.getMessage("error_localization_user_denied"));
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        displayError(chrome.i18n.getMessage("error_localization_location_unavailable"));
-                        break;
-                    case error.TIMEOUT:
-                        displayError(chrome.i18n.getMessage("error_localization_timeout"));
-                        break;
-                    case error.UNKNOWN_ERROR:
-                        displayError(chrome.i18n.getMessage("error_localization_generic"));
-                        break;
-                }
+    //FIXME: show wait spinner
+    switch(userSettings.location) {
+        case "auto":
+            if(coords == null) {
+                refreshCoordinates(() => {
+                    OpenWeatherMap.getCurrentWeatherByCoords(coords.latitude, coords.longitude, userSettings.units, (response) => {
+                        showWeatherData(response);
+                    });
+                });
+            } else {
+                OpenWeatherMap.getCurrentWeatherByCoords(coords.latitude, coords.longitude, userSettings.units, (response) => {
+                    showWeatherData(response);
+                });
+            }
+            break;
+        case "zip":
+            //FIXME: Hardcoded zip for testing
+            OpenWeatherMap.getCurrentWeatherByZip("80204", (response) => {
+                showWeatherData(response);
             });
-        } else {
-            //hide wait spinner
-            displayError(chrome.i18n.getMessage("error_localization_generic"));
-        }
+            break;
+        default:
+            displayError(chrome.i18n.getMessage("error_location_variable"));
+            break;
+    }
+    //FIXME: Remove wait spinner
+}
+
+function showWeatherData(data) {
+
+}
+
+function refreshCoordinates(callback) {
+    if(userSettings.location == "auto") {
+        navigator.geolocation.getCurrentPosition((position) => {
+            coords = { latitude: position.coords.latitude.toString(), longitude: position.coords.longitude.toString() };
+            callback();
+        }, (err) => {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    displayError(chrome.i18n.getMessage("error_localization_user_denied"));
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    displayError(chrome.i18n.getMessage("error_localization_location_unavailable"));
+                    break;
+                case error.TIMEOUT:
+                    displayError(chrome.i18n.getMessage("error_localization_timeout"));
+                    break;
+                case error.UNKNOWN_ERROR:
+                    displayError(chrome.i18n.getMessage("error_localization_generic"));
+                    break;
+            }
+        });
+    } else {
+        displayError(chrome.i18n.getMessage("error_localization_generic"));
     }
 }
 
@@ -60,7 +101,7 @@ function refreshDate() {
     document.getElementsByClassName("date")[0].innerHTML = formatDate(new Date());
 }
 
-function refreshTime(clockVersion) {
+function refreshTime() {
     let d = new Date();
     let hours = 0;
     let ampm = "";
@@ -77,19 +118,40 @@ function refreshTime(clockVersion) {
     document.getElementsByClassName("hour")[0].innerHTML = hours;
     document.getElementsByClassName("am-pm")[0].innerHTML = ampm;
     document.getElementsByClassName("minute")[0].innerHTML = padDigits(d.getMinutes());
-    document.getElementsByClassName("second")[0].innerHTML = padDigits(d.getSeconds());
+    document.getElementsByClassName("second")[0].innerHTML = 
+        userSettings.showSeconds ? padDigits(d.getSeconds()) : "";
 }
 
 function pullUserSettings() {
     chrome.storage.sync.get([ 
         'clockVersion',
-        'location' 
+        'location',
+        'dateFormat',
+        'backgroundColor',
+        'showSeconds',
+        'units'
     ], (result) => {
         userSettings.clockVersion = result.clockVersion;
         userSettings.location = result.location;
-        refreshDateTime();
+        userSettings.dateFormat = result.dateFormat;
+        userSettings.backgroundColor = result.backgroundColor;
+        userSettings.showSeconds = result.showSeconds;
+        userSettings.units = result.units;
+        setDisplayPreferences();
+        refreshTime();
+        refreshDate();
         refreshWeather();
     });
+}
+
+function setDefaultUserSettings() {
+    chrome.storage.sync.set({initialized: true});
+    chrome.storage.sync.set({clockVersion: '12'});
+    chrome.storage.sync.set({location: 'auto'});
+    chrome.storage.sync.set({dateFormat: 'US'});
+    chrome.storage.sync.set({backgroundColor: '#0099ff'});
+    chrome.storage.sync.set({showSeconds: true});
+    chrome.storage.sync.set({units: 'metric'});//or imperial
 }
 
 // TODO: allow for custom date formats based on user setting
