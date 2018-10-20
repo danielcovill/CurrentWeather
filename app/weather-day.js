@@ -22,7 +22,7 @@ class WeatherDay {
     get FriendlyDay() {
         let d = new Date(this.unixUtcDate);
         let result = "";
-        if(d == new Date()) {
+        if(d.toDateString() == new Date().toDateString()) {
             result = "current";
         } else {
             switch(d.getDay()) {
@@ -48,8 +48,8 @@ class WeatherDay {
                     result = "sat";
                     break;
             }
-            return chrome.i18n.getMessage(result);
         }
+        return chrome.i18n.getMessage(result);
     }
 }
 export default WeatherDay;
