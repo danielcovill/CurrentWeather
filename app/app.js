@@ -29,46 +29,66 @@ function setDisplayPreferences() {
     let bodyrgb = window.getComputedStyle(document.body).backgroundColor
     let bodyrgbvals = bodyrgb.slice(4,bodyrgb.length-1).split(',');
     let backgroundIsDark = (1 - (0.299 * bodyrgbvals[0] + 0.587 * bodyrgbvals[1] + 0.114 * bodyrgbvals[2]) / 255) > .5;
+    let loadingBars = document.getElementsByClassName("loading-bar");
     if(backgroundIsDark) {
-        document.body.classList.remove("light");
-        document.body.classList.add("dark");
-    } else {
-        document.body.classList.remove("dark");
         document.body.classList.add("light");
+        document.body.classList.remove("dark");
+        for(let i=0;i<loadingBars.length;i++) {
+            loadingBars[i].classList.add("light");
+            loadingBars[i].classList.remove("dark");
+        }
+    } else {
+        document.body.classList.add("dark");
+        document.body.classList.remove("light");
+        for(let i=0;i<loadingBars.length;i++) {
+            loadingBars[i].classList.add("dark");
+            loadingBars[i].classList.remove("light");
+        }
+    }
+}
+
+function setWeatherLoading(showIcon) {
+    if(showIcon) { 
+        document.getElementsByClassName("loading")[0].style.display = "block";
+        document.getElementsByClassName("forecast")[0].style.display = "none";
+    } else {
+        document.getElementsByClassName("loading")[0].style.display = "none";
+        document.getElementsByClassName("forecast")[0].style.display = "block";
     }
 }
 
 function refreshWeather() {
-    //FIXME: show wait spinner
+    setWeatherLoading(true);
     switch(userSettings.location) {
         case "auto":
             if(coords == null) {
                 refreshCoordinates(() => {
-                    OpenWeatherMap.getCurrentWeatherByCoords(coords.latitude, coords.longitude, userSettings.units, (response) => {
+                    OpenWeatherMap.getWeatherByCoords(coords.latitude, coords.longitude, userSettings.units).then((response) => {
                         showWeatherData(response);
                     });
                 });
             } else {
-                OpenWeatherMap.getCurrentWeatherByCoords(coords.latitude, coords.longitude, userSettings.units, (response) => {
+                OpenWeatherMap.getWeatherByCoords(coords.latitude, coords.longitude, userSettings.units).then((response) => {
                     showWeatherData(response);
                 });
             }
             break;
         case "zip":
-            //FIXME: Hardcoded zip for testing
-            OpenWeatherMap.getCurrentWeatherByZip("80204", (response) => {
+            //FIXME: Remove the hardcoded zip for testing
+            OpenWeatherMap.getWeatherByZip("80204", (response) => {
                 showWeatherData(response);
             });
             break;
         default:
             displayError(chrome.i18n.getMessage("error_location_variable"));
+            setWeatherLoading(false);
             break;
     }
-    //FIXME: Remove wait spinner
 }
 
 function showWeatherData(data) {
-
+    console.log(data);
+    setWeatherLoading(false);
 }
 
 function refreshCoordinates(callback) {
@@ -146,7 +166,7 @@ function pullUserSettings() {
 
 function setDefaultUserSettings() {
     chrome.storage.sync.set({initialized: true});
-    chrome.storage.sync.set({clockVersion: '12'});
+    chrome.storage.sync.set({clockVersion: '24'});
     chrome.storage.sync.set({location: 'auto'});
     chrome.storage.sync.set({dateFormat: 'US'});
     chrome.storage.sync.set({backgroundColor: '#0099ff'});

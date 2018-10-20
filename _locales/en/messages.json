@@ -23,6 +23,9 @@
       "message": "An unknown error occurred while attempting to gather location information.",
       "description": "The application request for location information failed for an unknown reason."
     },
+    "today": {
+      "message": "Today"
+    },
     "sun": {
       "message": "Sunday"
     },
