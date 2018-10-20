@@ -47,15 +47,31 @@ body.light {
 }
 /* Weather */
 .weather {
-    padding-top: 3em;
+    padding: 2em 1vw;
+    margin: 1em 0;
 }
 .weather .forecast {
     display: none;
+    justify-content: space-evenly;
+    padding: 0 5vw;
 }
-.forecast .day .wi {
-    font-size: 8vw;
+.weather .forecast .day {
+    font-size: 2vw;
 }
-
+.weather .forecast .day .maxtemp::after {
+    content: " /"
+}
+.weather .forecast .day .mintemp {
+    color: #666;
+}
+.weather .forecast .day .wi {
+    font-size: 9vw;
+    margin-bottom: .2em;
+}
+.location {
+    margin-top: 1vw;
+    font-size: 4vw;
+}
 /* Loading Icon */
 .loading {
     display: none;

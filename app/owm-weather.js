@@ -13,11 +13,12 @@ class OpenWeatherMap {
                 resolve(new WeatherDay(
                     Date.parse(new Date()),
                     result.name,
+                    result.weather[0].id,
                     result.main.temp,
                     result.main.temp_min,
                     result.main.temp_max,
-                    result.weather.icon,
-                    result.weather.length > 0 ? result.weather[0].description : "",
+                    result.weather[0].icon,
+                    result.weather[0].length > 0 ? result.weather[0].description : "",
                     result.wind.deg,
                     result.wind.speed,
                     result.wind.gust
@@ -29,10 +30,8 @@ class OpenWeatherMap {
                 let d = new Date();
                 let weatherDays = [];
 
-                // i=1 -> Skip today, gather 4 total future days
-                for(let i=1;i<5;i++) {
-                    d.setDate(d.getDate() + i);
-                    weatherDays.push(new WeatherDay(Date.parse(d), result.city.name)); 
+                for(let i=0;i<4;i++) {
+                    weatherDays.push(new WeatherDay(d.setDate(d.getDate() + 1), result.city.name)); 
                 }
 
                 result.list.forEach(item => {
@@ -55,13 +54,14 @@ class OpenWeatherMap {
                     if(currentWeatherDay == null) { return; }
 
                     //compare data over time pulling extremes
-                    if(!currentWeatherDay.temp_max < item.main.temp_max) {
-                        currentWeatherDay.temp_max = item.main.temp_max;
+                    if(!currentWeatherDay.maxTemp < item.main.temp_max) {
+                        currentWeatherDay.maxTemp  = item.main.temp_max;
                     }
-                    if(!currentWeatherDay.temp_min || currentWeatherDay.temp_min > item.main.temp_min ) {
-                        currentWeatherDay.temp_min = item.main.temp_min;
+                    if(!currentWeatherDay.minTemp || currentWeatherDay.temp_min > item.main.temp_min ) {
+                        currentWeatherDay.minTemp  = item.main.temp_min;
                     }
-                    if(!currentWeatherDay.icon || Number(currentWeatherDay.icon.slice(0,2)) < item.weather[0].icon.slice(0,2)) {
+                    if(!currentWeatherDay.weatherId || Number(currentWeatherDay.icon.slice(0,2)) < item.weather[0].icon.slice(0,2)) {
+                        currentWeatherDay.weatherId = item.weather[0].id;
                         currentWeatherDay.icon = item.weather[0].icon;
                         currentWeatherDay.description = item.weather[0].description;
                     }

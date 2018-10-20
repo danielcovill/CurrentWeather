@@ -1,7 +1,8 @@
 class WeatherDay {
-    constructor(unixUtcDate, location, currentTemp, minTemp, maxTemp, icon, description, windDirection, windSpeeed, windGust) {
+    constructor(unixUtcDate, location, weatherId, currentTemp, minTemp, maxTemp, icon, description, windDirection, windSpeeed, windGust) {
         this.unixUtcDate = unixUtcDate;
         this.location = location;
+        this.weatherId = weatherId;
         this.currentTemp = currentTemp;
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
@@ -22,7 +23,7 @@ class WeatherDay {
         let d = new Date(this.unixUtcDate);
         let result = "";
         if(d == new Date()) {
-            result = "today";
+            result = "current";
         } else {
             switch(d.getDay()) {
                 case 0:

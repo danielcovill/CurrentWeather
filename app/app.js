@@ -16,7 +16,7 @@ pullUserSettings();
 
 // Set in motion regular checks to update the clock and the weather
 let clockTick = setInterval(refreshTime, 1000);
-let weatherTick = setInterval(refreshWeather, 60000);
+let weatherTick = setInterval(refreshWeather, 3600000);
 
 function displayError(message) {
     document.getElementsByClassName("errorMessage")[0].innerHTML = message;
@@ -53,7 +53,7 @@ function setWeatherLoading(showIcon) {
         document.getElementsByClassName("forecast")[0].style.display = "none";
     } else {
         document.getElementsByClassName("loading")[0].style.display = "none";
-        document.getElementsByClassName("forecast")[0].style.display = "block";
+        document.getElementsByClassName("forecast")[0].style.display = "flex";
     }
 }
 
@@ -88,6 +88,32 @@ function refreshWeather() {
 
 function showWeatherData(data) {
     console.log(data);
+    let markupDays = document.getElementsByClassName("day");
+    for(let i=0;i<markupDays.length;i++) {
+        if(!!data[i].weatherId) {
+            markupDays[i].getElementsByClassName("wi")[0].classList.add("wi-owm-" + data[i].weatherId);
+        }
+        //if it's "now" we don't show min/max
+        let tempContainer = markupDays[i].getElementsByClassName("temp")[0];
+        let currentTemp = tempContainer.getElementsByClassName("current")[0];
+        let maxTemp = tempContainer.getElementsByClassName("maxtemp")[0];
+        let minTemp = tempContainer.getElementsByClassName("mintemp")[0];
+
+        if(!!data[i].unixUtcDate && new Date().toDateString() === new Date(data[i].unixUtcDate).toDateString()) {
+            currentTemp.style.display = "inline";
+            maxTemp.style.display = "none";
+            minTemp.style.display = "none";
+            currentTemp.innerHTML = Math.round(data[i].currentTemp);
+        } else {
+            currentTemp.style.display = "none";
+            maxTemp.style.display = "inline";
+            minTemp.style.display = "inline";
+            maxTemp.innerHTML = Math.round(data[i].maxTemp);
+            minTemp.innerHTML = Math.round(data[i].minTemp);
+        }
+        markupDays[i].getElementsByClassName("dayName")[0].innerHTML = data[i].FriendlyDay;
+    }
+    document.getElementsByClassName("location")[0].innerHTML = data[0].location;
     setWeatherLoading(false);
 }
 
@@ -169,7 +195,8 @@ function setDefaultUserSettings() {
     chrome.storage.sync.set({clockVersion: '24'});
     chrome.storage.sync.set({location: 'auto'});
     chrome.storage.sync.set({dateFormat: 'US'});
-    chrome.storage.sync.set({backgroundColor: '#0099ff'});
+    chrome.storage.sync.set({backgroundColor: '#aaaaaa'});
+    //chrome.storage.sync.set({backgroundColor: '#0099ff'});
     chrome.storage.sync.set({showSeconds: true});
     chrome.storage.sync.set({units: 'metric'});//or imperial
 }
