@@ -158,7 +158,7 @@ function refreshTime() {
         if(hours == 0) { hours = 12; }
         ampm = d.getHours() > 11 ? "PM" : "AM";
     }
-    if(d.getHours() == d.getMinutes() == d.getSeconds() == 0) {
+    if(d.getHours() == 0 && d.getMinutes() == 0 && d.getSeconds() == 0) {
         refreshDate();
     }
     document.getElementsByClassName("hour")[0].innerHTML = hours;
