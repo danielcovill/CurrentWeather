@@ -25,6 +25,7 @@
 body {
     font-family: "OpenSansRegular";
     font-weight: normal;
+    font-size: 14px;
 }
 body.dark {
     color: #333;
@@ -34,6 +35,56 @@ body.light {
 }
 .content {
     text-align: center;
+    padding-top: 2em;
+}
+.hamburger {
+    float: left;
+    cursor: pointer;
+    width: 3em;
+    height: 3em;
+    margin: 12px;
+}
+.hamburger .bar {
+    width: 100%;
+    height: .5em;
+    margin-top: .5em;
+    border-radius: 3px;
+}
+body.light .hamburger .bar {
+    background-color: #EEE;
+}
+body.dark .hamburger .bar {
+    background-color: #333;
+}
+.close-icon {
+    cursor: pointer;
+    width: 3em;
+    height: 3em;
+    margin: 12px;
+    float: right;
+    position: relative;
+}
+.close-icon::before, .close-icon::after {
+    position: absolute;
+    left: 0;
+    top: 1.5em;
+    content: '';
+    height: .3em;
+    width: 3em;
+    border-radius: 3px;
+    background-color: #333;
+}
+.close-icon:before {
+    transform: rotate(45deg);
+}
+.close-icon:after {
+    transform: rotate(-45deg);
+}
+body.dark .close-icon::before, body.dark .close-icon::after {
+    background-color: #333;
+}
+body.light .close-icon::before, body.light .close-icon::after {
+    background-color: #EEE;
 }
 .time {
     font-size: 12vw;
@@ -44,6 +95,67 @@ body.light {
 }
 .coords {
     display:none;
+}
+/* Settings */
+.left-sidebar {
+    position: fixed;
+    top: 0;
+    border-right: 1px solid #666;
+    height: 100vh;
+    width: 35em;
+    background-color: rgba(255,255,255,1);
+    z-index: 10;
+}
+.left-sidebar.show {
+    left: 0;
+}
+.left-sidebar.hide {
+    left: -35em;
+}
+.pref {
+    margin: 0 12px;
+}
+.pref:last-child::after {
+    display: none;
+}
+.pref::after {
+    content: "";
+    display: block;
+    height: 1px;
+    margin: 2.5em 0;
+    width: 100%;
+    background: #000;
+}
+.header {
+    margin: 1em 0;
+    font-family: "OpenSansBold";
+    font-size: 1em;
+}
+.pref label {
+    margin-right: 1em;
+}
+input[type="text"] {
+    border: 2px solid #666;
+    padding: 4px 10px;
+    font-size: 1em;
+    border-radius: 10px;
+}
+input[type="radio"] {
+    height: 1.1em;
+    width: 1.1em;
+}
+.pref input[type=color] {
+    height: 3em;
+    width: 12em;
+}
+.title {
+    margin: .5em 12px;
+    font-family: "OpenSansBold";
+    font-size: 2.5em;
+}
+.note {
+    font-size: .8em;
+    margin: .5em .2em;
 }
 /* Weather */
 .weather {
@@ -61,14 +173,17 @@ body.light {
 .weather .forecast .day .maxtemp::after {
     content: " /"
 }
-.weather .forecast .day .mintemp {
+body.dark .weather .forecast .day .mintemp {
     color: #666;
 }
-.weather .forecast .day .wi {
+body.light .weather .forecast .day .mintemp {
+    color: #555;
+}
+.content .weather .forecast .day .wi {
     font-size: 9vw;
     margin-bottom: .2em;
 }
-.location {
+.content .location {
     margin-top: 1vw;
     font-size: 4vw;
 }

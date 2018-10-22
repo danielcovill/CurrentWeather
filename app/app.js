@@ -3,6 +3,15 @@ import OpenWeatherMap from "./owm-weather.js";
 let userSettings = {};
 let coords = null;
 
+document.getElementById("left-sidebar-toggle").addEventListener("click", () => {
+    document.querySelector(".left-sidebar").classList.add("show");
+    document.querySelector(".left-sidebar").classList.remove("hide");
+});
+document.getElementById("left-sidebar-close").addEventListener("click", () => {
+    document.querySelector(".left-sidebar").classList.remove("show");
+    document.querySelector(".left-sidebar").classList.add("hide");
+});
+
 // Check if it's their first time running the app (or if their settings were nuked)
 // and set them up with defaults if necessary
 chrome.storage.sync.get(['initialized'], (result) => {
@@ -10,6 +19,9 @@ chrome.storage.sync.get(['initialized'], (result) => {
         setDefaultUserSettings();
     }
 });
+
+// Load initial state
+refreshLeftSidebar(location.hash=="#settings");
 
 // Get their settings out of storage (which refreshes views)
 pullUserSettings(); 
@@ -19,7 +31,7 @@ let clockTick = setInterval(refreshTime, 1000);
 let weatherTick = setInterval(refreshWeather, 3600000);
 
 function displayError(message) {
-    document.getElementsByClassName("errorMessage")[0].innerHTML = message;
+    document.querySelector(".errorMessage").innerHTML = message;
 }
 
 function setDisplayPreferences() {
@@ -45,15 +57,16 @@ function setDisplayPreferences() {
             loadingBars[i].classList.remove("light");
         }
     }
+    document.getElementById("colorPicker").value = rgbtohex(bodyrgb);
 }
 
 function setWeatherLoading(showIcon) {
     if(showIcon) { 
-        document.getElementsByClassName("loading")[0].style.display = "block";
-        document.getElementsByClassName("forecast")[0].style.display = "none";
+        document.querySelector(".weather>.loading").style.display = "block";
+        document.querySelector(".weather>.forecast").style.display = "none";
     } else {
-        document.getElementsByClassName("loading")[0].style.display = "none";
-        document.getElementsByClassName("forecast")[0].style.display = "flex";
+        document.querySelector(".weather>.loading").style.display = "none";
+        document.querySelector(".weather>.forecast").style.display = "flex";
     }
 }
 
@@ -87,17 +100,16 @@ function refreshWeather() {
 }
 
 function showWeatherData(data) {
-    console.log(data);
     let markupDays = document.getElementsByClassName("day");
     for(let i=0;i<markupDays.length;i++) {
         if(!!data[i].weatherId) {
-            markupDays[i].getElementsByClassName("wi")[0].classList.add("wi-owm-" + data[i].weatherId);
+            markupDays[i].querySelector(".wi").classList.add("wi-owm-" + data[i].weatherId);
         }
         //if it's "now" we don't show min/max
-        let tempContainer = markupDays[i].getElementsByClassName("temp")[0];
-        let currentTemp = tempContainer.getElementsByClassName("current")[0];
-        let maxTemp = tempContainer.getElementsByClassName("maxtemp")[0];
-        let minTemp = tempContainer.getElementsByClassName("mintemp")[0];
+        let tempContainer = markupDays[i].querySelector(".temp");
+        let currentTemp = tempContainer.querySelector(".current");
+        let maxTemp = tempContainer.querySelector(".maxtemp");
+        let minTemp = tempContainer.querySelector(".mintemp");
 
         if(!!data[i].unixUtcDate && new Date().toDateString() === new Date(data[i].unixUtcDate).toDateString()) {
             currentTemp.style.display = "inline";
@@ -111,9 +123,9 @@ function showWeatherData(data) {
             maxTemp.innerHTML = Math.round(data[i].maxTemp);
             minTemp.innerHTML = Math.round(data[i].minTemp);
         }
-        markupDays[i].getElementsByClassName("dayName")[0].innerHTML = data[i].FriendlyDay;
+        markupDays[i].querySelector(".dayName").innerHTML = data[i].FriendlyDay;
     }
-    document.getElementsByClassName("location")[0].innerHTML = data[0].location;
+    document.querySelector(".content>.location").innerHTML = data[0].location;
     setWeatherLoading(false);
 }
 
@@ -144,7 +156,7 @@ function refreshCoordinates(callback) {
 }
 
 function refreshDate() {
-    document.getElementsByClassName("date")[0].innerHTML = formatDate(new Date());
+    document.querySelector(".date").innerHTML = formatDate(new Date());
 }
 
 function refreshTime() {
@@ -161,10 +173,10 @@ function refreshTime() {
     if(d.getHours() == 0 && d.getMinutes() == 0 && d.getSeconds() == 0) {
         refreshDate();
     }
-    document.getElementsByClassName("hour")[0].innerHTML = hours;
-    document.getElementsByClassName("am-pm")[0].innerHTML = ampm;
-    document.getElementsByClassName("minute")[0].innerHTML = padDigits(d.getMinutes());
-    document.getElementsByClassName("second")[0].innerHTML = 
+    document.querySelector(".hour").innerHTML = hours;
+    document.querySelector(".am-pm").innerHTML = ampm;
+    document.querySelector(".minute").innerHTML = padDigits(d.getMinutes());
+    document.querySelector(".second").innerHTML = 
         userSettings.showSeconds ? padDigits(d.getSeconds()) : "";
 }
 
@@ -223,4 +235,22 @@ function padDigits(value) {
         result = "0" + result;
     }
     return result;
+}
+
+function rgbtohex(rgb) {
+    rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+    return (rgb && rgb.length === 4) ? "#" +
+     ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+     ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+     ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+}
+
+function refreshLeftSidebar(showSidebar) {
+    if(showSidebar) {
+        document.querySelector(".left-sidebar").classList.add("show");
+        document.querySelector(".left-sidebar").classList.remove("hide");
+    } else {
+        document.querySelector(".left-sidebar").classList.add("hide");
+        document.querySelector(".left-sidebar").classList.remove("show");
+    }
 }

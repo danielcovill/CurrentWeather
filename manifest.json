@@ -1,6 +1,7 @@
 {
     "name": "CurrentWeather",
     "version": "0.1",
+    "options_page": "app/index.html#settings",
     "description": "Chrome extension that shows the current time and weather",
     "chrome_url_overrides": {
         "newtab": "app/index.html"
