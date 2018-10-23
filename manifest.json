@@ -1,5 +1,5 @@
 {
-    "name": "CurrentWeather",
+    "name": "Simple",
     "version": "1.0.0",
     "options_page": "app/index.html#settings",
     "icons": {
