@@ -3,34 +3,38 @@ import OpenWeatherMap from "./owm-weather.js";
 let coords = null;
 
 document.getElementById("left-sidebar-toggle").addEventListener("click", () => {
-    document.querySelector(".left-sidebar").classList.add("show");
-    document.querySelector(".left-sidebar").classList.remove("hide");
+    toggleLeftSidebar(true);
 });
 document.getElementById("left-sidebar-close").addEventListener("click", () => {
-    document.querySelector(".left-sidebar").classList.remove("show");
-    document.querySelector(".left-sidebar").classList.add("hide");
+    toggleLeftSidebar(false);
 });
 document.getElementById("settingsForm").addEventListener("change", (event) => {
     setUserSetting(event.srcElement.name, event.srcElement.value);
-    console.log(event.srcElement.name);
-    console.log(event.srcElement.value);
 });
 
 // Check if it's their first time running the app (or if their settings were nuked)
 // and set them up with defaults if necessary
-chrome.storage.sync.get(['initialized'], (result) => {
-    if(!result.initialized) {
-        setDefaultUserSettings();
-    }
+new Promise((resolve) => { 
+    chrome.storage.sync.get(['initialized'], (result) => {
+        if(!result.initialized) {
+            resolve(setDefaultUserSettings());
+        } else {
+            resolve();
+        }
+    });
+}).then(() => {
+    // Load initial state
+    toggleLeftSidebar(location.hash=="#settings");
+    initializeUI();
+
+    // Set in motion regular checks to update the clock and the weather
+    let clockTick = setInterval(refreshTime, 1000);
+    let weatherTick = setInterval(refreshWeather, 3600000);
+}).catch((reason) => {
+    console.log(reason);
 });
 
-// Load initial state
-toggleLeftSidebar(location.hash=="#settings");
-initializeUI();
 
-// Set in motion regular checks to update the clock and the weather
-let clockTick = setInterval(refreshTime, 1000);
-let weatherTick = setInterval(refreshWeather, 3600000);
 
 function displayError(message) {
     document.querySelector(".errorMessage").innerHTML = message;
@@ -90,7 +94,6 @@ function refreshWeather() {
                 });
             }
         } else {
-            //FIXME: Remove the hardcoded zip for testing
             OpenWeatherMap.getWeatherByZip(result.location, result.units).then((response) => {
                 showWeatherData(response);
             });
@@ -190,13 +193,43 @@ function initializeUI() {
 }
 
 function setDefaultUserSettings() {
-    chrome.storage.sync.set({initialized: true});
-    chrome.storage.sync.set({clockVersion: '12'});
-    chrome.storage.sync.set({location: ''});
-    chrome.storage.sync.set({dateFormat: 'US'});
-    chrome.storage.sync.set({backgroundColor: '#aaaaaa'});
-    chrome.storage.sync.set({showSeconds: true});
-    chrome.storage.sync.set({units: 'metric'});
+    let allSettings = [];
+    allSettings.push(new Promise((resolve) => {
+        chrome.storage.sync.set({initialized: true}, () => {
+            resolve();
+        });
+    }))
+    allSettings.push(new Promise((resolve) => {
+        chrome.storage.sync.set({clockVersion: '12'}, () => {
+            resolve();
+        });
+    }))
+    allSettings.push(new Promise((resolve) => {
+        chrome.storage.sync.set({location: ''}, () => {
+            resolve();
+        });
+    }))
+    allSettings.push(new Promise((resolve) => {
+        chrome.storage.sync.set({dateFormat: 'US'}, () => {
+            resolve();
+        });
+    }))
+    allSettings.push(new Promise((resolve) => {
+        chrome.storage.sync.set({backgroundColor: '#aaaaaa'}, () => {
+            resolve();
+        });
+    }))
+    allSettings.push(new Promise((resolve) => {
+        chrome.storage.sync.set({showSeconds: true}, () => {
+            resolve();
+        });
+    }))
+    allSettings.push(new Promise((resolve) => {
+        chrome.storage.sync.set({units: 'metric'}, () => {
+            resolve();
+        });
+    }))
+    return Promise.all(allSettings);
 }
 
 // TODO: allow for custom date formats based on user setting
@@ -232,11 +265,13 @@ function rgbtohex(rgb) {
 
 function toggleLeftSidebar(showSidebar) {
     if(showSidebar) {
-        document.querySelector(".left-sidebar").classList.add("show");
+        document.querySelector(".menu-icon").style.visibility = "hidden";
         document.querySelector(".left-sidebar").classList.remove("hide");
+        document.querySelector(".left-sidebar").classList.add("show");
     } else {
-        document.querySelector(".left-sidebar").classList.add("hide");
         document.querySelector(".left-sidebar").classList.remove("show");
+        document.querySelector(".left-sidebar").classList.add("hide");
+        document.querySelector(".menu-icon").style.visibility = "visible";
     }
 }
 

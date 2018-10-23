@@ -18,6 +18,8 @@ gulp.task('minify-js', function () {
                 min: '.js'
             },
             noSource: true,
+            mangle: true,
+            compress: true
         }))
         .pipe(gulp.dest('build/app'))
 });
