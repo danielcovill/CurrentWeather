@@ -91,7 +91,7 @@ function refreshWeather() {
             }
         } else {
             //FIXME: Remove the hardcoded zip for testing
-            OpenWeatherMap.getWeatherByZip(result.location, (response) => {
+            OpenWeatherMap.getWeatherByZip(result.location, result.units).then((response) => {
                 showWeatherData(response);
             });
         }
@@ -245,17 +245,14 @@ function setUserSetting(setting, value) {
         case "hour":
             if(value == 12 || value == 24) {
                 console.log(value);
-                chrome.storage.sync.set({clockVersion: value}, () => {
-                });
+                chrome.storage.sync.set({clockVersion: value});
             }
             break;
         case "seconds":
             if(value === "off") {
-                chrome.storage.sync.set({showSeconds: false}, () => {
-                 });
+                chrome.storage.sync.set({showSeconds: false});
             } else if (value === "on") {
-                chrome.storage.sync.set({showSeconds: true}, () => {
-                 });
+                chrome.storage.sync.set({showSeconds: true});
             }
             refreshTime();
             break;
@@ -309,7 +306,7 @@ function refreshSettings() {
             document.getElementById("hourRadio12").removeAttribute("checked");
         }
         document.getElementById("zipInput").setAttribute("value", result.location);
-        if(result.showSeconds == "on") {
+        if(result.showSeconds) {
             document.getElementById("secondsRadioOn").setAttribute("checked", "checked");
             document.getElementById("secondsRadioOff").removeAttribute("checked");
         } else {

@@ -8,6 +8,17 @@ class OpenWeatherMap {
     static getWeatherByCoords(lat, lon, units) {
         let todayUrl = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&units=" + units + "&appid=" + appid;
         let futureUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=" + units + "&appid=" + appid;
+        return this.getWeather(todayUrl, futureUrl);
+ 
+    }
+
+    static getWeatherByZip(zip, units) {
+        let todayUrl = "https://api.openweathermap.org/data/2.5/weather?zip=" + zip + "&units=" + units + "&appid=" + appid;
+        let futureUrl = "https://api.openweathermap.org/data/2.5/forecast?zip=" + zip + "&units=" + units + "&appid=" + appid;
+        return this.getWeather(todayUrl, futureUrl);
+    }
+
+    static getWeather(todayUrl, futureUrl) {
         let todayPromise = new Promise((resolve, reject) => {
             this.apiCallHandler(todayUrl, (result) => {
                 resolve(new WeatherDay(
@@ -54,11 +65,11 @@ class OpenWeatherMap {
                     if(currentWeatherDay == null) { return; }
 
                     //compare data over time pulling extremes
-                    if(!currentWeatherDay.maxTemp < item.main.temp_max) {
-                        currentWeatherDay.maxTemp  = item.main.temp_max;
+                    if(!currentWeatherDay.maxTemp || currentWeatherDay.maxTemp < item.main.temp_max) {
+                        currentWeatherDay.maxTemp = item.main.temp_max;
                     }
-                    if(!currentWeatherDay.minTemp || currentWeatherDay.temp_min > item.main.temp_min ) {
-                        currentWeatherDay.minTemp  = item.main.temp_min;
+                    if(!currentWeatherDay.minTemp || currentWeatherDay.minTemp > item.main.temp_min ) {
+                        currentWeatherDay.minTemp = item.main.temp_min;
                     }
                     if(!currentWeatherDay.weatherId || Number(currentWeatherDay.icon.slice(0,2)) < item.weather[0].icon.slice(0,2)) {
                         currentWeatherDay.weatherId = item.weather[0].id;
@@ -77,12 +88,6 @@ class OpenWeatherMap {
             });
             return result;
         });
-    }
-
-    static getWeatherByZip(zip, units, callback) {
-        let todayUrl = "https://api.openweathermap.org/data/2.5/weather?zip=" + zip + "&units=" + units + "&appid=" + appid;
-        let futureUrl = "https://api.openweathermap.org/data/2.5/forecast?zip=" + zip + "&units=" + units + "&appid=" + appid;
-        this.apiCallHandler(todayUrl, callback);
     }
 
     static apiCallHandler(url, callback) {

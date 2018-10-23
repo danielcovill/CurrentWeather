@@ -97,12 +97,6 @@ body.dark .menu-icon,body.dark .menu-icon::before,body.dark .menu-icon::after {
 .close-icon:after {
     transform: rotate(-45deg);
 }
-body.dark .close-icon::before, body.dark .close-icon::after {
-    background-color: #333;
-}
-body.light .close-icon::before, body.light .close-icon::after {
-    background-color: #EEE;
-}
 .time {
     font-size: 12vw;
     font-family: "OpenSansLight"
@@ -115,13 +109,14 @@ body.light .close-icon::before, body.light .close-icon::after {
 }
 /* Settings */
 .left-sidebar {
+    color: #333;
     position: absolute;
     top: 0;
     border-right: 1px solid #666;
     min-height: 100vh;
     padding-bottom: 4em;
     width: 35em;
-    background-color: rgba(255,255,255,1);
+    background-color: rgba(255,255,255,.8);
     z-index: 10;
     transition: left .3s;
 }
