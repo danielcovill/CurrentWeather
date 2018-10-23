@@ -37,24 +37,41 @@ body.light {
     text-align: center;
     padding-top: 2em;
 }
-.hamburger {
-    float: left;
+#left-sidebar-toggle {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+}
+.menu-icon {
     cursor: pointer;
     width: 3em;
-    height: 3em;
-    margin: 12px;
-}
-.hamburger .bar {
-    width: 100%;
-    height: .5em;
-    margin-top: .5em;
+    height: .4em;
     border-radius: 3px;
+    background-color: #333;
+    margin: 22px 12px 12px 12px;
+    float: left;
+    position: relative;
 }
-body.light .hamburger .bar {
+.menu-icon::after,.menu-icon::before {
+    position: absolute;
+    left: 0;
+    content: '';
+    height: .4em;
+    width: 3em;
+    border-radius: 3px;
+    background-color: #555; 
+}
+body.light .menu-icon,body.light .menu-icon::before,body.light .menu-icon::after {
     background-color: #EEE;
 }
-body.dark .hamburger .bar {
+body.dark .menu-icon,body.dark .menu-icon::before,body.dark .menu-icon::after {
     background-color: #333;
+}
+.menu-icon::after {
+    top: 1em;
+}
+.menu-icon::before {
+    top: -1em;
 }
 .close-icon {
     cursor: pointer;
@@ -98,15 +115,17 @@ body.light .close-icon::before, body.light .close-icon::after {
 }
 /* Settings */
 .left-sidebar {
-    position: fixed;
+    position: absolute;
     top: 0;
     border-right: 1px solid #666;
-    height: 100vh;
+    min-height: 100vh;
+    padding-bottom: 4em;
     width: 35em;
     background-color: rgba(255,255,255,1);
     z-index: 10;
+    transition: left .3s;
 }
-.left-sidebar.show {
+.left-sidebar.show {   
     left: 0;
 }
 .left-sidebar.hide {

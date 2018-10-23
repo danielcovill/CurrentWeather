@@ -23,6 +23,10 @@
       "message": "An unknown error occurred while attempting to gather location information.",
       "description": "The application request for location information failed for an unknown reason."
     },
+    "error_invalid_setting": {
+      "message": "Unknown setting has been changed.",
+      "description": "The user tried to change a setting that shouldn't exist."
+    },
     "current": {
       "message": "Current"
     },
