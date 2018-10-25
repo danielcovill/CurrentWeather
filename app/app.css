@@ -1,31 +1,43 @@
 @font-face {
-    font-family: "OpenSansRegular";
-    src: url("../fonts/OpenSans-Regular.ttf");
+    font-family: "HelveticaNeueUltraLightCondensed";
+    src: url("../fonts/HelveticaNeue-UltraLigCond.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
-    font-family: "OpenSansBold";
-    src: url("../fonts/OpenSans-Bold.ttf");
+    font-family: "HelveticaNeueUltraLightCondensedOblique";
+    src: url("../fonts/HelveticaNeue-UltraLigCondObl.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
-    font-family: "OpenSansLight";
-    src: url("../fonts/OpenSans-Light.ttf");
-    font-weight: lighter;
+    font-family: "HelveticaNeueUltraLight";
+    src: url("../fonts/HelveticaNeue-UltraLight.otf") format("opentype");
+    font-weight: normal;
     font-style: normal;
 }
 @font-face {
-    font-family: "OpenSansSemiBold";
-    src: url("../fonts/OpenSans-Semibold.ttf");
-    font-weight: normal; 
+    font-family: "HelveticaNeueUltraLightItalic";
+    src: url("../fonts/HelveticaNeue-UltraLightItal.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "HelveticaNeueUltraLightExtended";
+    src: url("../fonts/HelveticaNeue-UltraLigExt.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "HelveticaNeueUltraLightExtendedOblique";
+    src: url("../fonts/HelveticaNeue-UltraLigExtObl.otf") format("opentype");
+    font-weight: normal;
     font-style: normal;
 }
 body {
-    font-family: "OpenSansRegular";
+    font-family: "HelveticaNeueUltraLight";
     font-weight: normal;
-    font-size: 14px;
+    font-size: 16px;
 }
 body.dark {
     color: #333;
@@ -35,7 +47,7 @@ body.light {
 }
 .content {
     text-align: center;
-    padding-top: 2em;
+    padding-top: 8em;
 }
 #left-sidebar-toggle {
     position: absolute;
@@ -44,8 +56,8 @@ body.light {
 }
 .menu-icon {
     cursor: pointer;
-    width: 3em;
-    height: .4em;
+    width: 2.3em;
+    height: .3em;
     border-radius: 3px;
     background-color: #333;
     margin: 22px 12px 12px 12px;
@@ -56,8 +68,8 @@ body.light {
     position: absolute;
     left: 0;
     content: '';
-    height: .4em;
-    width: 3em;
+    height: .3em;
+    width: 2.3em;
     border-radius: 3px;
     background-color: #555; 
 }
@@ -68,15 +80,15 @@ body.dark .menu-icon,body.dark .menu-icon::before,body.dark .menu-icon::after {
     background-color: #333;
 }
 .menu-icon::after {
-    top: 1em;
+    top: .7em;
 }
 .menu-icon::before {
-    top: -1em;
+    top: -.7em;
 }
 .close-icon {
     cursor: pointer;
-    width: 3em;
-    height: 3em;
+    width: 2em;
+    height: 2em;
     margin: 12px;
     float: right;
     position: relative;
@@ -87,7 +99,7 @@ body.dark .menu-icon,body.dark .menu-icon::before,body.dark .menu-icon::after {
     top: 1.5em;
     content: '';
     height: .3em;
-    width: 3em;
+    width: 2em;
     border-radius: 3px;
     background-color: #333;
 }
@@ -98,8 +110,7 @@ body.dark .menu-icon,body.dark .menu-icon::before,body.dark .menu-icon::after {
     transform: rotate(-45deg);
 }
 .time {
-    font-size: 12vw;
-    font-family: "OpenSansLight"
+    font-size: 10vw;
 }
 .date {
     font-size: 2vw;
@@ -107,7 +118,7 @@ body.dark .menu-icon,body.dark .menu-icon::before,body.dark .menu-icon::after {
 .coords {
     display:none;
 }
-/* Settings */
+/* settings */
 .left-sidebar {
     color: #333;
     position: absolute;
@@ -142,7 +153,7 @@ body.dark .menu-icon,body.dark .menu-icon::before,body.dark .menu-icon::after {
 }
 .header {
     margin: 1em 0;
-    font-family: "OpenSansBold";
+    font-weight: bold;
     font-size: 1em;
 }
 .pref label {
@@ -164,7 +175,7 @@ input[type="radio"] {
 }
 .title {
     margin: .5em 12px;
-    font-family: "OpenSansBold";
+    font-weight: bold;
     font-size: 2.5em;
 }
 .note {
@@ -177,12 +188,35 @@ input[type="radio"] {
     margin: 1em 0;
 }
 .weather .forecast {
-    display: none;
     justify-content: space-evenly;
-    padding: 0 5vw;
+    padding: 0 7vw;
+    display: flex;
 }
-.weather .forecast .day {
+.content .weather .forecast .day {
     font-size: 2vw;
+    transition: opacity 1s;
+}
+.content .weather .forecast .day.hide {
+    opacity: 0;
+}
+.content .weather .forecast .day:nth-of-type(1).show {
+    opacity: 1;
+}
+.content .weather .forecast .day:nth-of-type(2).show {
+    transition-delay: .1s;
+    opacity: 1;
+}
+.content .weather .forecast .day:nth-of-type(3).show {
+    transition-delay: .2s;
+    opacity: 1;
+}
+.content .weather .forecast .day:nth-of-type(4).show {
+    transition-delay: .3s;
+    opacity: 1;
+}
+.content .weather .forecast .day:nth-of-type(5).show {
+    transition-delay: .4s;
+    opacity: 1;
 }
 .weather .forecast .day .maxtemp::after {
     content: " /"
@@ -194,16 +228,24 @@ body.light .weather .forecast .day .mintemp {
     color: #555;
 }
 .content .weather .forecast .day .wi {
-    font-size: 9vw;
+    font-size: 4vw;
     margin-bottom: .2em;
 }
 .content .location {
     margin-top: 1vw;
-    font-size: 4vw;
+    font-size: 2vw;
+    transition: opacity 1s;
+}
+.content .location.hide {
+    opacity: 0;
+}
+.content .location.show {
+    transition-delay: .5s;
+    opacity: 1;
 }
 /* Loading Icon */
 .loading {
-    display: none;
+    opacity: 0;
 }
 .loading-bar {
   display: inline-block;

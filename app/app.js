@@ -70,11 +70,11 @@ function refreshColors() {
 
 function setWeatherLoading(showIcon) {
     if(showIcon) { 
-        document.querySelector(".weather>.loading").style.display = "block";
-        document.querySelector(".weather>.forecast").style.display = "none";
+        document.querySelector(".weather>.loading").style.opacity = "1";
+        document.querySelector(".weather>.forecast").style.opacity = "0";
     } else {
-        document.querySelector(".weather>.loading").style.display = "none";
-        document.querySelector(".weather>.forecast").style.display = "flex";
+        document.querySelector(".weather>.loading").style.opacity = "0";
+        document.querySelector(".weather>.forecast").style.opacity = "1";
     }
 }
 
@@ -128,6 +128,12 @@ function showWeatherData(data) {
         markupDays[i].querySelector(".dayName").innerHTML = data[i].FriendlyDay;
     }
     document.querySelector(".content>.location").innerHTML = data[0].location;
+    document.querySelector(".content>.location").classList.remove("hide");
+    document.querySelector(".content>.location").classList.add("show");
+    document.querySelectorAll(".content>.weather>.forecast>.day").forEach((element) => {
+        element.classList.remove("hide");
+        element.classList.add("show");
+    });
     setWeatherLoading(false);
 }
 
