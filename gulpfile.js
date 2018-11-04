@@ -4,7 +4,7 @@ const minify = require('gulp-minify');
 const zip = require('gulp-zip');
 const del = require('del');
 
-var copyFiles = ['*fonts/**/*', '*images/**/*', '*_locales/**/*', '*.md', 'manifest.json', 'LICENSE', '*app/*.html'];
+var copyFiles = ['*fonts/**/*', '*images/**/*', '*_locales/**/*', 'README.md', 'manifest.json', 'LICENSE', '*app/*.html'];
 
 gulp.task('minify-css', function () {
     return gulp.src('app/*.css')

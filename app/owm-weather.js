@@ -2,7 +2,6 @@ import WeatherDay from "./weather-day.js";
 
 const appid = "b0f862ef54b989442647ab3a73f3d5eb";
 
-
 class OpenWeatherMap {
 
     static getWeatherByCoords(lat, lon, units) {
@@ -18,6 +17,7 @@ class OpenWeatherMap {
         return this.getWeather(todayUrl, futureUrl);
     }
 
+    // Returns array of weatherdays
     static getWeather(todayUrl, futureUrl) {
         let todayPromise = new Promise((resolve, reject) => {
             this.apiCallHandler(todayUrl, (result) => {

@@ -1,6 +1,7 @@
 import OpenWeatherMap from "./owm-weather.js";
-
-let coords = null;
+import Weather from "./weather.js";
+import Settings from "./settings.js";
+const weather = new Weather(OpenWeatherMap);
 
 document.getElementById("left-sidebar-toggle").addEventListener("click", () => {
     toggleLeftSidebar(true);
@@ -8,64 +9,82 @@ document.getElementById("left-sidebar-toggle").addEventListener("click", () => {
 document.getElementById("left-sidebar-close").addEventListener("click", () => {
     toggleLeftSidebar(false);
 });
-document.getElementById("settingsForm").addEventListener("change", (event) => {
-    setUserSetting(event.srcElement.name, event.srcElement.value);
+document.getElementById("settingsForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+});
+document.getElementById("settingsForm").addEventListener("change", async (event) => {
+    await Settings.setUserSetting(event.srcElement.name, event.srcElement.value);
+    switch(event.srcElement.name) {
+        case "hour":
+        case "seconds":
+            refreshTime();
+            break;
+        case "bgColor":
+            await refreshColors();
+            break;
+        case "zip":
+        case "units":
+            const weatherData = weather.getWeather();
+            setWeatherLoading(true);
+            refreshWeather(await weatherData);
+            setWeatherLoading(false);
+            break;
+    }
 });
 
-// Check if it's their first time running the app (or if their settings were nuked)
-// and set them up with defaults if necessary
-new Promise((resolve) => { 
-    chrome.storage.sync.get(['initialized'], (result) => {
-        if(!result.initialized) {
-            resolve(setDefaultUserSettings());
-        } else {
-            resolve();
-        }
-    });
-}).then(() => {
-    // Load initial state
+initializeApplication();
+
+async function initializeApplication() {
+    setInterval(refreshTime, 1000);
+
+    // Initialize settings
+    await Settings.initializeSettings(false);
+    const weatherData = weather.getWeather();
+    
+    // Set up UI and refresh necessary UI elements
     toggleLeftSidebar(location.hash=="#settings");
-    initializeUI();
-
-    // Set in motion regular checks to update the clock and the weather
-    let clockTick = setInterval(refreshTime, 1000);
-    let weatherTick = setInterval(refreshWeather, 3600000);
-}).catch((reason) => {
-    console.log(reason);
-});
-
-
+    await Promise.all([
+        refreshSettingsPane(),
+        refreshColors(),
+        refreshTime()
+    ]);
+    refreshDate();
+    setWeatherLoading(true);
+    refreshWeather(await weatherData);
+    setWeatherLoading(false);
+}
 
 function displayError(message) {
     document.querySelector(".errorMessage").innerHTML = message;
 }
 
-function refreshColors() {
-    chrome.storage.sync.get(['backgroundColor'], (result) => {
-        document.body.style.backgroundColor = result.backgroundColor;
-
-        // Based on the background color, pick light or dark text
-        let bodyrgb = window.getComputedStyle(document.body).backgroundColor
-        let bodyrgbvals = bodyrgb.slice(4,bodyrgb.length-1).split(',');
-        let backgroundIsDark = (1 - (0.299 * bodyrgbvals[0] + 0.587 * bodyrgbvals[1] + 0.114 * bodyrgbvals[2]) / 255) > .5;
-        let loadingBars = document.getElementsByClassName("loading-bar");
-        if(backgroundIsDark) {
-            document.body.classList.add("light");
-            document.body.classList.remove("dark");
-            for(let i=0;i<loadingBars.length;i++) {
-                loadingBars[i].classList.add("light");
-                loadingBars[i].classList.remove("dark");
-            }
-        } else {
-            document.body.classList.add("dark");
-            document.body.classList.remove("light");
-            for(let i=0;i<loadingBars.length;i++) {
-                loadingBars[i].classList.add("dark");
-                loadingBars[i].classList.remove("light");
-            }
-        }
-        document.getElementById("colorPicker").value = rgbtohex(bodyrgb);
+async function refreshColors() {
+    const backgroundColorResult = await new Promise((resolve) => { 
+        chrome.storage.sync.get(['backgroundColor'], (result) => {
+            resolve(result);
+        });
     });
+
+    document.body.style.backgroundColor = backgroundColorResult.backgroundColor;
+    let backgroundIsDark = Settings.isColorDark(backgroundColorResult.backgroundColor)
+
+    let loadingBars = document.getElementsByClassName("loading-bar");
+    if(backgroundIsDark) {
+        document.body.classList.add("light");
+        document.body.classList.remove("dark");
+        for(let i=0;i<loadingBars.length;i++) {
+            loadingBars[i].classList.add("light");
+            loadingBars[i].classList.remove("dark");
+        }
+    } else {
+        document.body.classList.add("dark");
+        document.body.classList.remove("light");
+        for(let i=0;i<loadingBars.length;i++) {
+            loadingBars[i].classList.add("dark");
+            loadingBars[i].classList.remove("light");
+        }
+    }
+
 }
 
 function setWeatherLoading(showIcon) {
@@ -78,30 +97,7 @@ function setWeatherLoading(showIcon) {
     }
 }
 
-function refreshWeather() {
-    setWeatherLoading(true);
-    chrome.storage.sync.get(['location','units'], (result) => {
-        if(result.location == "") {
-            if(coords == null) {
-                refreshCoordinates(() => {
-                    OpenWeatherMap.getWeatherByCoords(coords.latitude, coords.longitude, result.units).then((response) => {
-                        showWeatherData(response);
-                    });
-                });
-            } else {
-                OpenWeatherMap.getWeatherByCoords(coords.latitude, coords.longitude, result.units).then((response) => {
-                    showWeatherData(response);
-                });
-            }
-        } else {
-            OpenWeatherMap.getWeatherByZip(result.location, result.units).then((response) => {
-                showWeatherData(response);
-            });
-        }
-    });
-}
-
-function showWeatherData(data) {
+function refreshWeather(data) {
     let markupDays = document.getElementsByClassName("day");
     for(let i=0;i<markupDays.length;i++) {
         if(!!data[i].weatherId) {
@@ -134,112 +130,50 @@ function showWeatherData(data) {
         element.classList.remove("hide");
         element.classList.add("show");
     });
-    setWeatherLoading(false);
-}
-
-function refreshCoordinates(callback) {
-    chrome.storage.sync.get(['location'], (result) => {
-        if(result.location == "") {
-            navigator.geolocation.getCurrentPosition((position) => {
-                coords = { latitude: position.coords.latitude.toString(), longitude: position.coords.longitude.toString() };
-                callback();
-            }, (error) => {
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        displayError(chrome.i18n.getMessage("error_localization_user_denied"));
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        displayError(chrome.i18n.getMessage("error_localization_location_unavailable"));
-                        break;
-                    case error.TIMEOUT:
-                        displayError(chrome.i18n.getMessage("error_localization_timeout"));
-                        break;
-                    case error.UNKNOWN_ERROR:
-                        displayError(chrome.i18n.getMessage("error_localization_generic"));
-                        break;
-                }
-            });
-        }
-    });
 }
 
 function refreshDate() {
     document.querySelector(".date").innerHTML = formatDate(new Date());
 }
 
-function refreshTime() {
-    chrome.storage.sync.get(['clockVersion','showSeconds'], (result) => {
-        let d = new Date();
-        let hours = 0;
-        let ampm = "";
-        if(result.clockVersion == 24) {
-            hours = padDigits(d.getHours());
-        } else {
-            hours = d.getHours() % 12;
-            if(hours == 0) { hours = 12; }
-            ampm = d.getHours() > 11 ? "PM" : "AM";
-        }
-        if(d.getHours() == 0 && d.getMinutes() == 0 && d.getSeconds() == 0) {
-            refreshDate();
-        }
-        document.querySelector(".hour").innerHTML = hours;
-        document.querySelector(".am-pm").innerHTML = ampm;
-        document.querySelector(".minute").innerHTML = padDigits(d.getMinutes());
-        document.querySelector(".second").innerHTML = 
-            result.showSeconds ? padDigits(d.getSeconds()) : "";
+async function refreshTime() {
+    const syncResult = await new Promise((resolve) => {
+        chrome.storage.sync.get(['clockVersion','showSeconds'], (result) => {
+            resolve(result);
+        });
     });
+    let dateTime = new Date();
+    let hours = 0;
+    let ampm = "";
+    if(syncResult.clockVersion == 24) {
+        hours = padDigits(dateTime.getHours());
+    } else {
+        hours = dateTime.getHours() % 12;
+        if(hours == 0) { hours = 12; }
+        ampm = dateTime.getHours() > 11 ? "PM" : "AM";
+    }
+    if(dateTime.getHours() == 0 && dateTime.getMinutes() == 0 && dateTime.getSeconds() == 0) {
+        refreshDate(formatDate(new Date()));
+    }
+    document.querySelector(".hour").innerHTML = hours;
+    document.querySelector(".am-pm").innerHTML = ampm;
+    document.querySelector(".minute").innerHTML = padDigits(dateTime.getMinutes());
+    document.querySelector(".second").innerHTML = syncResult.showSeconds ? padDigits(dateTime.getSeconds()) : "";
 }
 
-function initializeUI() {
-    refreshSettings();
-    refreshColors();
-    refreshTime();
-    refreshDate();
-    refreshWeather();
+function toggleLeftSidebar(showSidebar) {
+    if(showSidebar) {
+        document.querySelector(".menu-icon").style.visibility = "hidden";
+        document.querySelector(".left-sidebar").classList.remove("hide");
+        document.querySelector(".left-sidebar").classList.add("show");
+    } else {
+        document.querySelector(".left-sidebar").classList.remove("show");
+        document.querySelector(".left-sidebar").classList.add("hide");
+        document.querySelector(".menu-icon").style.visibility = "visible";
+    }
 }
 
-function setDefaultUserSettings() {
-    let allSettings = [];
-    allSettings.push(new Promise((resolve) => {
-        chrome.storage.sync.set({initialized: true}, () => {
-            resolve();
-        });
-    }))
-    allSettings.push(new Promise((resolve) => {
-        chrome.storage.sync.set({clockVersion: '12'}, () => {
-            resolve();
-        });
-    }))
-    allSettings.push(new Promise((resolve) => {
-        chrome.storage.sync.set({location: ''}, () => {
-            resolve();
-        });
-    }))
-    allSettings.push(new Promise((resolve) => {
-        chrome.storage.sync.set({dateFormat: 'US'}, () => {
-            resolve();
-        });
-    }))
-    allSettings.push(new Promise((resolve) => {
-        chrome.storage.sync.set({backgroundColor: '#aaaaaa'}, () => {
-            resolve();
-        });
-    }))
-    allSettings.push(new Promise((resolve) => {
-        chrome.storage.sync.set({showSeconds: true}, () => {
-            resolve();
-        });
-    }))
-    allSettings.push(new Promise((resolve) => {
-        chrome.storage.sync.set({units: 'metric'}, () => {
-            resolve();
-        });
-    }))
-    return Promise.all(allSettings);
-}
-
-// TODO: allow for custom date formats based on user setting
-function formatDate(jsDate, dateFormat) {
+function formatDate(jsDate) {
     const monthNames = [ "jan", "feb", "mar", "apr", "may", "jun", 
         "jul", "aug", "sep", "oct", "nov", "dec" ];
     const dayNames = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
@@ -261,106 +195,43 @@ function padDigits(value) {
     return result;
 }
 
-function rgbtohex(rgb) {
-    rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-    return (rgb && rgb.length === 4) ? "#" +
-     ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-     ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-     ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
-}
-
-function toggleLeftSidebar(showSidebar) {
-    if(showSidebar) {
-        document.querySelector(".menu-icon").style.visibility = "hidden";
-        document.querySelector(".left-sidebar").classList.remove("hide");
-        document.querySelector(".left-sidebar").classList.add("show");
-    } else {
-        document.querySelector(".left-sidebar").classList.remove("show");
-        document.querySelector(".left-sidebar").classList.add("hide");
-        document.querySelector(".menu-icon").style.visibility = "visible";
-    }
-}
-
-function setUserSetting(setting, value) {
-    switch(setting) {
-        case "hour":
-            if(value == 12 || value == 24) {
-                console.log(value);
-                chrome.storage.sync.set({clockVersion: value});
-            }
-            break;
-        case "seconds":
-            if(value === "off") {
-                chrome.storage.sync.set({showSeconds: false});
-            } else if (value === "on") {
-                chrome.storage.sync.set({showSeconds: true});
-            }
-            refreshTime();
-            break;
-        case "zip":
-            if(value === "") {
-                chrome.storage.sync.set({location: ""}, () => {
-                    refreshWeather();
-                });
-            } else {
-                chrome.storage.sync.set({location: value}, () => {
-                    refreshWeather();
-                });
-            }
-            break;
-        case "units":
-            if(value === "metric") {
-                chrome.storage.sync.set({units: "metric"}, () => {
-                    refreshWeather();
-                });
-            } else if (value === "imperial") {
-                chrome.storage.sync.set({units: "imperial"}, () => {
-                    refreshWeather();
-                });
-            }
-            break;
-        case "bgColor":
-            chrome.storage.sync.set({backgroundColor: value}, () => {
-                refreshColors();
-            });
-            break;
-        default:
-            displayError(chrome.i18n.getMessage("error_invalid_setting"));
-            break;
-    }
-}
-
-function refreshSettings() {
-    chrome.storage.sync.get([ 
-        'clockVersion',
-        'location',
-        'dateFormat',
-        'backgroundColor',
-        'showSeconds',
-        'units'
-    ], (result) => { 
-        if(result.clockVersion == 12) {
-            document.getElementById("hourRadio12").setAttribute("checked", "checked");
-            document.getElementById("hourRadio24").removeAttribute("checked");
-        } else {
-            document.getElementById("hourRadio24").setAttribute("checked", "checked");
-            document.getElementById("hourRadio12").removeAttribute("checked");
-        }
-        document.getElementById("zipInput").setAttribute("value", result.location);
-        if(result.showSeconds) {
-            document.getElementById("secondsRadioOn").setAttribute("checked", "checked");
-            document.getElementById("secondsRadioOff").removeAttribute("checked");
-        } else {
-            document.getElementById("secondsRadioOff").setAttribute("checked", "checked");
-            document.getElementById("secondsRadioOn").removeAttribute("checked");
-        }
-        if(result.units == "metric") {
-            document.getElementById("unitsRadioMetric").setAttribute("checked", "checked");
-            document.getElementById("unitsRadioImperial").removeAttribute("checked");
-        } else {
-            document.getElementById("unitsRadioImperial").setAttribute("checked", "checked");
-            document.getElementById("unitsRadioMetric").removeAttribute("checked");
-        }
-        document.getElementById("colorPicker").setAttribute("value", result.backgroundColor);
+async function refreshSettingsPane() {
+    const settingsResult = await new Promise((resolve) => {
+        chrome.storage.sync.get([
+            'clockVersion',
+            'location',
+            'dateFormat',
+            'backgroundColor',
+            'showSeconds',
+            'units'
+        ], (result) => {
+            resolve(result);
+        });
     });
+    if (settingsResult.clockVersion == 12) {
+        document.getElementById("hourRadio12").setAttribute("checked", "checked");
+        document.getElementById("hourRadio24").removeAttribute("checked");
+    }
+    else {
+        document.getElementById("hourRadio24").setAttribute("checked", "checked");
+        document.getElementById("hourRadio12").removeAttribute("checked");
+    }
+    document.getElementById("zipInput").setAttribute("value", settingsResult.location);
+    if (settingsResult.showSeconds) {
+        document.getElementById("secondsRadioOn").setAttribute("checked", "checked");
+        document.getElementById("secondsRadioOff").removeAttribute("checked");
+    }
+    else {
+        document.getElementById("secondsRadioOff").setAttribute("checked", "checked");
+        document.getElementById("secondsRadioOn").removeAttribute("checked");
+    }
+    if (settingsResult.units == "metric") {
+        document.getElementById("unitsRadioMetric").setAttribute("checked", "checked");
+        document.getElementById("unitsRadioImperial").removeAttribute("checked");
+    }
+    else {
+        document.getElementById("unitsRadioImperial").setAttribute("checked", "checked");
+        document.getElementById("unitsRadioMetric").removeAttribute("checked");
+    }
+    document.getElementById("colorPicker").setAttribute("value", settingsResult.backgroundColor);
 }
