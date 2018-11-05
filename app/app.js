@@ -20,6 +20,9 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
             refreshTime();
             break;
         case "bgColor":
+        case "pfColor":
+        case "sfColor":
+        case "autofontcolor":
             await refreshColors();
             break;
         case "zip":
@@ -28,6 +31,8 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
             setWeatherLoading(true);
             refreshWeather(await weatherData);
             setWeatherLoading(false);
+            break;
+        default:
             break;
     }
 });
@@ -59,30 +64,46 @@ function displayError(message) {
 }
 
 async function refreshColors() {
-    const backgroundColorResult = await new Promise((resolve) => { 
-        chrome.storage.sync.get(['backgroundColor'], (result) => {
+    const colorResult = await new Promise((resolve) => { 
+        chrome.storage.sync.get(['backgroundColor', 'autoFontColor', 'primaryFontColor', 'secondaryFontColor'], (result) => {
             resolve(result);
         });
     });
 
-    document.body.style.backgroundColor = backgroundColorResult.backgroundColor;
-    let backgroundIsDark = Settings.isColorDark(backgroundColorResult.backgroundColor)
+    document.body.style.backgroundColor = colorResult.backgroundColor;
 
-    let loadingBars = document.getElementsByClassName("loading-bar");
-    if(backgroundIsDark) {
-        document.body.classList.add("light");
-        document.body.classList.remove("dark");
-        for(let i=0;i<loadingBars.length;i++) {
-            loadingBars[i].classList.add("light");
-            loadingBars[i].classList.remove("dark");
+    let primaryColorNodes = document.getElementsByClassName('primaryColor');
+    let secondaryColorNodes = document.getElementsByClassName('secondaryColor')
+    if(colorResult.autoFontColor) {
+        let backgroundIsDark = Settings.isColorDark(colorResult.backgroundColor)
+        if(backgroundIsDark) {
+            for(let i=0;i<primaryColorNodes.length;i++) {
+                primaryColorNodes[i].style.color = "#EEE";
+            }
+            for(let i=0;i<secondaryColorNodes.length;i++) {
+                secondaryColorNodes[i].style.color = "#888";
+            }
+        } else {
+            for(let i=0;i<primaryColorNodes.length;i++) {
+                primaryColorNodes[i].style.color = "#333";
+            }
+            for(let i=0;i<secondaryColorNodes.length;i++) {
+                secondaryColorNodes[i].style.color = "#555";
+            }
         }
     } else {
-        document.body.classList.add("dark");
-        document.body.classList.remove("light");
-        for(let i=0;i<loadingBars.length;i++) {
-            loadingBars[i].classList.add("dark");
-            loadingBars[i].classList.remove("light");
-        }
+            for(let i=0;i<primaryColorNodes.length;i++) {
+                primaryColorNodes[i].style.color = colorResult.primaryFontColor;
+            }
+            for(let i=0;i<secondaryColorNodes.length;i++) {
+                secondaryColorNodes[i].style.color = colorResult.secondaryFontColor;
+            }
+    }
+
+    if(colorResult.autoFontColor) {
+        document.getElementById("fontColors").style.display = "none";
+    } else {
+        document.getElementById("fontColors").style.display = "block";
     }
 
 }
@@ -202,6 +223,9 @@ async function refreshSettingsPane() {
             'location',
             'dateFormat',
             'backgroundColor',
+            'autoFontColor',
+            'primaryFontColor',
+            'secondaryFontColor',
             'showSeconds',
             'units'
         ], (result) => {
@@ -233,5 +257,16 @@ async function refreshSettingsPane() {
         document.getElementById("unitsRadioImperial").setAttribute("checked", "checked");
         document.getElementById("unitsRadioMetric").removeAttribute("checked");
     }
-    document.getElementById("colorPicker").setAttribute("value", settingsResult.backgroundColor);
+    if (settingsResult.autoFontColor) {
+        document.getElementById("autoFontOn").setAttribute("checked", "checked");
+        document.getElementById("autoFontOff").removeAttribute("checked");
+        document.getElementById("fontColors").style.display = "none";
+    } else {
+        document.getElementById("autoFontOff").setAttribute("checked", "checked");
+        document.getElementById("autoFontOn").removeAttribute("checked");
+        document.getElementById("fontColors").style.display = "block";
+    }
+    document.getElementById("bgColorPicker").setAttribute("value", settingsResult.backgroundColor);
+    document.getElementById("pfColorPicker").setAttribute("value", settingsResult.primaryFontColor);
+    document.getElementById("sfColorPicker").setAttribute("value", settingsResult.secondaryFontColor);
 }

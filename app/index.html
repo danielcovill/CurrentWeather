@@ -6,7 +6,7 @@
     <link href="weather-icons.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>
+<body class="primaryColor">
     <div class="errorMessage"></div>
     <a id="left-sidebar-toggle" href="#settings" >
         <div class="menu-icon"></div>
@@ -38,14 +38,25 @@
             </div>
             <div class="pref units">
                 <div class="header">Temperature Units</div>
-                <input type="radio" name="units" id="unitsRadioImperial" value="imperial" checked="checked" />
+                <input type="radio" name="units" id="unitsRadioImperial" value="imperial" />
                 <label for="unitsRadioImperial">Imperial (F)</label>
                 <input type="radio" name="units" id="unitsRadioMetric" value="metric" />
                 <label for="unitsRadioMetric">Metric (C)</label>
             </div>
-            <div class="pref background">
+            <div class="pref colors">
                 <div class="header">Background Color</div>
-                <input type="color" name="bgColor" id="colorPicker" value="#ffffff">
+                <input type="color" name="bgColor" id="bgColorPicker" value="#ffffff">
+                <div class="header">Font Colors</div>
+                <input type="radio" name="autofontcolor" id="autoFontOn" value="on" />
+                <label for="autoFontOn">Auto</label>
+                <input type="radio" name="autofontcolor" id="autoFontOff" value="off" />
+                <label for="autoFontOff">Manual</label>
+                <div id="fontColors">
+                    <div class="header">Primary Font Color</div>
+                    <input type="color" name="pfColor" id="pfColorPicker" value="#ffffff">
+                    <div class="header">Secondary Font Color</div>
+                    <input type="color" name="sfColor" id="sfColorPicker" value="#ffffff">
+                </div>
             </div>
         </form>
     </div>
@@ -65,7 +76,7 @@
                     <div class="temp">
                         <span class="current"></span>
                         <span class="maxtemp"></span>
-                        <span class="mintemp"></span>
+                        <span class="mintemp secondaryColor"></span>
                     </div>
                     <div class="dayName"></div>
                 </div>
@@ -74,7 +85,7 @@
                     <div class="temp">
                         <span class="current"></span>
                         <span class="maxtemp"></span>
-                        <span class="mintemp"></span>
+                        <span class="mintemp secondaryColor"></span>
                     </div>
                     <div class="dayName"></div>
                 </div>
@@ -83,7 +94,7 @@
                     <div class="temp">
                         <span class="current"></span>
                         <span class="maxtemp"></span>
-                        <span class="mintemp"></span>
+                        <span class="mintemp secondaryColor"></span>
                     </div>
                     <div class="dayName"></div>
                 </div>
@@ -92,7 +103,7 @@
                     <div class="temp">
                         <span class="current"></span>
                         <span class="maxtemp"></span>
-                        <span class="mintemp"></span>
+                        <span class="mintemp secondaryColor"></span>
                     </div>
                     <div class="dayName"></div>
                 </div>
@@ -101,17 +112,17 @@
                     <div class="temp">
                         <span class="current"></span>
                         <span class="maxtemp"></span>
-                        <span class="mintemp"></span>
+                        <span class="mintemp secondaryColor"></span>
                     </div>
                     <div class="dayName"></div>
                 </div>
             </div>
-            <div class="loading">
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
+            <div class="loading primaryColor">
+                <div class="loading-bar primaryColor"></div>
+                <div class="loading-bar primaryColor"></div>
+                <div class="loading-bar primaryColor"></div>
+                <div class="loading-bar primaryColor"></div>
+                <div class="loading-bar primaryColor"></div>
             </div>
         </div>
         <div class="location hide">

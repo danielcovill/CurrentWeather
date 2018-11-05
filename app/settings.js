@@ -2,7 +2,7 @@ class Settings {
 
     static async initializeSettings(forceReset) {
         if(forceReset) {
-            await setDefaultUserSettings();
+            await this.setDefaultUserSettings();
         } else {
             await new Promise((resolve) => {
                 chrome.storage.sync.get(['initialized'], (result) => {
@@ -46,7 +46,22 @@ class Settings {
                 });
             }),
             new Promise((resolve) => {
-                chrome.storage.sync.set({backgroundColor: '#aaaaaa'}, () => {
+                chrome.storage.sync.set({primaryFontColor: '#EEEEEE'}, () => {
+                    resolve();
+                });
+            }),
+            new Promise((resolve) => {
+                chrome.storage.sync.set({secondaryFontColor: '#666666'}, () => {
+                    resolve();
+                });
+            }),
+            new Promise((resolve) => {
+                chrome.storage.sync.set({backgroundColor: '#005493'}, () => {
+                    resolve();
+                });
+            }),
+            new Promise((resolve) => {
+                chrome.storage.sync.set({autoFontColor: true}, () => {
                     resolve();
                 });
             }),
@@ -150,7 +165,28 @@ class Settings {
                     });
                 });
                 break;
-            default:
+            case "pfColor":
+                settingPromise = new Promise((resolve) => {
+                    chrome.storage.sync.set({primaryFontColor: value}, () => {
+                        resolve();
+                    });
+                });
+                break;
+            case "sfColor":
+                settingPromise = new Promise((resolve) => {
+                    chrome.storage.sync.set({secondaryFontColor: value}, () => {
+                        resolve();
+                    });
+                });
+                break;
+            case "autofontcolor":
+                settingPromise = new Promise((resolve) => {
+                    chrome.storage.sync.set({autoFontColor: (value == "on")}, () => {
+                        resolve();
+                    });
+                });
+                break;
+         default:
                 settingPromise = Promise.reject("error_invalid_setting");
                 break;
         }
