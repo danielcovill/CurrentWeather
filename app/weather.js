@@ -1,3 +1,5 @@
+import Settings from "./settings.js";
+
 class Weather {
 
     constructor(_provider) {
@@ -11,6 +13,10 @@ class Weather {
                 resolve(result);
             });
         });
+
+        if(storageResult.location == "" && !storageResult.coords) {
+            await Settings.refreshCoordinates();
+        }
     
         const weatherResult = await new Promise((resolve) => {
             if(storageResult.location == "" && !!storageResult.coords) {
@@ -21,7 +27,7 @@ class Weather {
                 this.provider.getWeatherByZip(storageResult.location, storageResult.units).then((response) => {
                     resolve(response);
                 });
-            }
+            } 
         });
 
         return weatherResult;
