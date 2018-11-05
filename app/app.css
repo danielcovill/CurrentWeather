@@ -71,9 +71,11 @@ body {
 }
 .menu-icon::after {
     top: .7em;
+    background-color: inherit;
 }
 .menu-icon::before {
     top: -.7em;
+    background-color: inherit;
 }
 .close-icon {
     cursor: pointer;

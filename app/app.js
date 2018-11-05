@@ -73,39 +73,35 @@ async function refreshColors() {
     document.body.style.backgroundColor = colorResult.backgroundColor;
 
     let primaryColorNodes = document.getElementsByClassName('primaryColor');
-    let secondaryColorNodes = document.getElementsByClassName('secondaryColor')
-    if(colorResult.autoFontColor) {
-        let backgroundIsDark = Settings.isColorDark(colorResult.backgroundColor)
-        if(backgroundIsDark) {
-            for(let i=0;i<primaryColorNodes.length;i++) {
-                primaryColorNodes[i].style.color = "#EEE";
-            }
-            for(let i=0;i<secondaryColorNodes.length;i++) {
-                secondaryColorNodes[i].style.color = "#888";
-            }
-        } else {
-            for(let i=0;i<primaryColorNodes.length;i++) {
-                primaryColorNodes[i].style.color = "#333";
-            }
-            for(let i=0;i<secondaryColorNodes.length;i++) {
-                secondaryColorNodes[i].style.color = "#555";
-            }
-        }
-    } else {
-            for(let i=0;i<primaryColorNodes.length;i++) {
-                primaryColorNodes[i].style.color = colorResult.primaryFontColor;
-            }
-            for(let i=0;i<secondaryColorNodes.length;i++) {
-                secondaryColorNodes[i].style.color = colorResult.secondaryFontColor;
-            }
-    }
+    let secondaryColorNodes = document.getElementsByClassName('secondaryColor');
+    let menuIcons = document.getElementsByClassName("menu-icon");
+    let primaryColor;
+    let secondaryColor;
 
     if(colorResult.autoFontColor) {
+        if(Settings.isColorDark(colorResult.backgroundColor)) {
+            primaryColor = "#EEE";
+            secondaryColor = "#BBB";
+        } else {
+            primaryColor = "#333";
+            secondaryColor = "#555";
+        }
         document.getElementById("fontColors").style.display = "none";
     } else {
+        primaryColor = colorResult.primaryFontColor;
+        secondaryColor = colorResult.secondaryFontColor;
         document.getElementById("fontColors").style.display = "block";
     }
 
+    for(let i=0;i<primaryColorNodes.length;i++) {
+        primaryColorNodes[i].style.color = primaryColor;
+    }
+    for(let i=0;i<secondaryColorNodes.length;i++) {
+        secondaryColorNodes[i].style.color = secondaryColor;
+    }
+    for(let i=0;i<menuIcons.length;i++) {
+        menuIcons[i].style.backgroundColor = primaryColor;
+    }
 }
 
 function setWeatherLoading(showIcon) {

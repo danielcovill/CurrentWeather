@@ -6,3 +6,6 @@ Chrome extension that shows the current time and weather
 Brand new!
 ## 1.0.1
 New fonts and animations. Minor layout tweaks.
+## 1.0.2
+Color selection for primary and secondary text.
+Faster location retrieval
