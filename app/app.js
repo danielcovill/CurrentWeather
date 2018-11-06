@@ -27,10 +27,7 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
             break;
         case "zip":
         case "units":
-            const weatherData = weather.getWeather();
-            setWeatherLoading(true);
-            refreshWeather(await weatherData);
-            setWeatherLoading(false);
+            refreshWeather(await weather.getWeather());
             break;
         default:
             break;
@@ -40,6 +37,7 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 initializeApplication();
 
 async function initializeApplication() {
+    refreshTime();
     setInterval(refreshTime, 1000);
 
     // Initialize settings
@@ -50,13 +48,11 @@ async function initializeApplication() {
     toggleLeftSidebar(location.hash=="#settings");
     await Promise.all([
         refreshSettingsPane(),
-        refreshColors(),
-        refreshTime()
+        refreshColors()
     ]);
     refreshDate();
-    setWeatherLoading(true);
-    refreshWeather(await weatherData);
-    setWeatherLoading(false);
+    let finalData = await weatherData;
+    refreshWeather(finalData);
 }
 
 function displayError(message) {
@@ -104,16 +100,6 @@ async function refreshColors() {
     }
 }
 
-function setWeatherLoading(showIcon) {
-    if(showIcon) { 
-        document.querySelector(".weather>.loading").style.opacity = "1";
-        document.querySelector(".weather>.forecast").style.opacity = "0";
-    } else {
-        document.querySelector(".weather>.loading").style.opacity = "0";
-        document.querySelector(".weather>.forecast").style.opacity = "1";
-    }
-}
-
 function refreshWeather(data) {
     let markupDays = document.getElementsByClassName("day");
     for(let i=0;i<markupDays.length;i++) {
@@ -122,22 +108,17 @@ function refreshWeather(data) {
         }
         //if it's "now" we don't show min/max
         let tempContainer = markupDays[i].querySelector(".temp");
-        let currentTemp = tempContainer.querySelector(".current");
+        let currentTemp = document.querySelector(".currentTemp");
         let maxTemp = tempContainer.querySelector(".maxtemp");
         let minTemp = tempContainer.querySelector(".mintemp");
 
         if(!!data[i].unixUtcDate && new Date().toDateString() === new Date(data[i].unixUtcDate).toDateString()) {
-            currentTemp.style.display = "inline";
-            maxTemp.style.display = "none";
-            minTemp.style.display = "none";
-            currentTemp.innerHTML = Math.round(data[i].currentTemp);
-        } else {
-            currentTemp.style.display = "none";
-            maxTemp.style.display = "inline";
-            minTemp.style.display = "inline";
-            maxTemp.innerHTML = Math.round(data[i].maxTemp);
-            minTemp.innerHTML = Math.round(data[i].minTemp);
-        }
+            currentTemp.innerHTML = "Currently: " + Math.round(data[i].currentTemp);
+        } 
+        maxTemp.style.display = "inline";
+        minTemp.style.display = "inline";
+        maxTemp.innerHTML = Math.round(data[i].maxTemp);
+        minTemp.innerHTML = Math.round(data[i].minTemp);
         markupDays[i].querySelector(".dayName").innerHTML = data[i].FriendlyDay;
     }
     document.querySelector(".content>.location").innerHTML = data[0].location;

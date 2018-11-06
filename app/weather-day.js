@@ -23,7 +23,7 @@ class WeatherDay {
         let d = new Date(this.unixUtcDate);
         let result = "";
         if(d.toDateString() == new Date().toDateString()) {
-            result = "current";
+            result = "today";
         } else {
             switch(d.getDay()) {
                 case 0:

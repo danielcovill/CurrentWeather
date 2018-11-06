@@ -29,7 +29,7 @@ class OpenWeatherMap {
                     result.main.temp_min,
                     result.main.temp_max,
                     result.weather[0].icon,
-                    result.weather[0].length > 0 ? result.weather[0].description : "",
+                    result.weather[0].description,
                     result.wind.deg,
                     result.wind.speed,
                     result.wind.gust

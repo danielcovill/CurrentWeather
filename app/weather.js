@@ -14,13 +14,17 @@ class Weather {
             });
         });
 
+        let coords = storageResult.coords;
+
         if(storageResult.location == "" && !storageResult.coords) {
-            await Settings.refreshCoordinates();
+            coords = await Settings.refreshCoordinates();
+        } else {
+            Settings.refreshCoordinates();
         }
     
         const weatherResult = await new Promise((resolve) => {
-            if(storageResult.location == "" && !!storageResult.coords) {
-                this.provider.getWeatherByCoords(storageResult.coords.latitude, storageResult.coords.longitude, storageResult.units).then((response) => {
+            if(storageResult.location == "" && !!coords) {
+                this.provider.getWeatherByCoords(coords.latitude, coords.longitude, storageResult.units).then((response) => {
                     resolve(response);
                 });
             } else {

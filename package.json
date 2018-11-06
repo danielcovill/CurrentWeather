@@ -1,0 +1,25 @@
+{
+  "name": "simple",
+  "description": "Chrome extension that shows the current time and weather",
+  "dependencies": {},
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^2.0.1",
+    "gulp-copy": "^4.0.1",
+    "gulp-csso": "^3.0.1",
+    "gulp-minify": "^3.1.0",
+    "gulp-zip": "^4.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielcovill/CurrentWeather.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/danielcovill/CurrentWeather/issues"
+  }
+}

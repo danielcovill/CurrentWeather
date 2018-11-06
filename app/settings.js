@@ -106,8 +106,8 @@ class Settings {
     
         const coords = { latitude: position.coords.latitude.toString(), longitude: position.coords.longitude.toString() };
         return new Promise((resolve) => {
-            chrome.storage.sync.set({coords: coords}, (result) => {
-                resolve(result);
+            chrome.storage.sync.set({coords: coords}, () => {
+                resolve(coords);
             });
         });
     }
