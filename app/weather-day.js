@@ -1,5 +1,5 @@
 class WeatherDay {
-    constructor(unixUtcDate, location, weatherId, currentTemp, minTemp, maxTemp, icon, description, windDirection, windSpeeed, windGust) {
+    constructor(unixUtcDate, location, weatherId, currentTemp, minTemp, maxTemp, icon, description, sunriseUTC, sunsetUTC, windDirection, windSpeeed, windGust) {
         this.unixUtcDate = unixUtcDate;
         this.location = location;
         this.weatherId = weatherId;
@@ -8,6 +8,8 @@ class WeatherDay {
         this.maxTemp = maxTemp;
         this.icon = icon;
         this.description = description;
+        this.sunriseUTC = sunriseUTC;
+        this.sunsetUTC = sunsetUTC;
         this.wind = {
             direction: windDirection,
             speed: windSpeeed,

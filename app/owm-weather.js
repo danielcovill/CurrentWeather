@@ -30,6 +30,8 @@ class OpenWeatherMap {
                     result.main.temp_max,
                     result.weather[0].icon,
                     result.weather[0].description,
+                    result.sys.sunrise,
+                    result.sys.sunset,
                     result.wind.deg,
                     result.wind.speed,
                     result.wind.gust

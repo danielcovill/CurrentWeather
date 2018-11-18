@@ -22,7 +22,7 @@ class Weather {
             Settings.refreshCoordinates();
         }
     
-        const weatherResult = await new Promise((resolve) => {
+        const weatherResult = new Promise((resolve) => {
             if(storageResult.location == "" && !!coords) {
                 this.provider.getWeatherByCoords(coords.latitude, coords.longitude, storageResult.units).then((response) => {
                     resolve(response);

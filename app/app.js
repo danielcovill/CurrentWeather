@@ -13,21 +13,32 @@ document.getElementById("settingsForm").addEventListener("submit", async (event)
     event.preventDefault();
 });
 document.getElementById("settingsForm").addEventListener("change", async (event) => {
+    let weatherData;
     await Settings.setUserSetting(event.srcElement.name, event.srcElement.value);
     switch(event.srcElement.name) {
         case "hour":
         case "seconds":
             refreshTime();
             break;
+        case "autofontcolor":
+        case "background":
+            weatherData = await weather.getWeather();
+            await updateSolarMovement(weatherData);
+            await Promise.all([
+                refreshSettingsPane(),
+                refreshColors()
+            ]);
+            break;
         case "bgColor":
         case "pfColor":
         case "sfColor":
-        case "autofontcolor":
             await refreshColors();
             break;
         case "zip":
         case "units":
-            refreshWeather(await weather.getWeather());
+            weatherData = await weather.getWeather();
+            await updateSolarMovement(weatherData);
+            refreshWeather(weatherData);
             break;
         default:
             break;
@@ -42,7 +53,8 @@ async function initializeApplication() {
 
     // Initialize settings
     await Settings.initializeSettings(false);
-    const weatherData = weather.getWeather();
+    const weatherData = await weather.getWeather();
+    await updateSolarMovement(weatherData);
     
     // Set up UI and refresh necessary UI elements
     toggleLeftSidebar(location.hash=="#settings");
@@ -55,18 +67,38 @@ async function initializeApplication() {
     refreshWeather(finalData);
 }
 
+async function updateSolarMovement(weather) {
+    const sunrise = new Date(weather[0].sunrise);
+    const sunset = new Date(weather[0].sunset);
+    return Promise.all([
+        Settings.setUserSetting("sunrise", sunrise),
+        Settings.setUserSetting("sunset", sunset)
+    ]);
+}
+
 function displayError(message) {
     document.querySelector(".errorMessage").innerHTML = message;
 }
 
 async function refreshColors() {
     const colorResult = await new Promise((resolve) => { 
-        chrome.storage.sync.get(['backgroundColor', 'autoFontColor', 'primaryFontColor', 'secondaryFontColor'], (result) => {
+        chrome.storage.sync.get(['background', 'backgroundColor', 'autoFontColor', 'primaryFontColor', 'secondaryFontColor'], (result) => {
             resolve(result);
         });
     });
 
-    document.body.style.backgroundColor = colorResult.backgroundColor;
+    if(colorResult.background == "manual") {
+        document.body.style.background = colorResult.backgroundColor;
+    } else if (colorResult.background == "tod") {
+        const today = new Date();
+        const sunrise = new Date();
+        sunrise.setHours(6);
+        sunrise.setMinutes(0);
+        const sunset = new Date();
+        sunset.setMinutes(0);
+        sunset.setHours(17);
+        document.body.style.background = Settings.getDaytimeColor(today, sunrise, sunset);
+    }
 
     let primaryColorNodes = document.getElementsByClassName('primaryColor');
     let secondaryColorNodes = document.getElementsByClassName('secondaryColor');
@@ -82,11 +114,9 @@ async function refreshColors() {
             primaryColor = "#333";
             secondaryColor = "#555";
         }
-        document.getElementById("fontColors").style.display = "none";
     } else {
         primaryColor = colorResult.primaryFontColor;
         secondaryColor = colorResult.secondaryFontColor;
-        document.getElementById("fontColors").style.display = "block";
     }
 
     for(let i=0;i<primaryColorNodes.length;i++) {
@@ -199,6 +229,7 @@ async function refreshSettingsPane() {
             'clockVersion',
             'location',
             'dateFormat',
+            'background',
             'backgroundColor',
             'autoFontColor',
             'primaryFontColor',
@@ -217,7 +248,6 @@ async function refreshSettingsPane() {
         document.getElementById("hourRadio24").setAttribute("checked", "checked");
         document.getElementById("hourRadio12").removeAttribute("checked");
     }
-    document.getElementById("zipInput").setAttribute("value", settingsResult.location);
     if (settingsResult.showSeconds) {
         document.getElementById("secondsRadioOn").setAttribute("checked", "checked");
         document.getElementById("secondsRadioOff").removeAttribute("checked");
@@ -234,6 +264,20 @@ async function refreshSettingsPane() {
         document.getElementById("unitsRadioImperial").setAttribute("checked", "checked");
         document.getElementById("unitsRadioMetric").removeAttribute("checked");
     }
+    switch (settingsResult.background) {
+        case "manual":
+            document.getElementById("autoBgManual").setAttribute("checked", "checked");
+            document.getElementById("autoBgTod").removeAttribute("checked");
+            document.getElementById("bgColors").style.display = "block";
+            break;
+        case "tod":
+            document.getElementById("autoBgTod").setAttribute("checked", "checked");
+            document.getElementById("autoBgManual").removeAttribute("checked");
+            document.getElementById("bgColors").style.display = "none";
+            break;
+        default:
+            break;
+    }
     if (settingsResult.autoFontColor) {
         document.getElementById("autoFontOn").setAttribute("checked", "checked");
         document.getElementById("autoFontOff").removeAttribute("checked");
@@ -243,6 +287,7 @@ async function refreshSettingsPane() {
         document.getElementById("autoFontOn").removeAttribute("checked");
         document.getElementById("fontColors").style.display = "block";
     }
+    document.getElementById("zipInput").setAttribute("value", settingsResult.location);
     document.getElementById("bgColorPicker").setAttribute("value", settingsResult.backgroundColor);
     document.getElementById("pfColorPicker").setAttribute("value", settingsResult.primaryFontColor);
     document.getElementById("sfColorPicker").setAttribute("value", settingsResult.secondaryFontColor);

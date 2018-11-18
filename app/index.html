@@ -44,8 +44,15 @@
                 <label for="unitsRadioMetric">Metric (C)</label>
             </div>
             <div class="pref colors">
-                <div class="header">Background Color</div>
-                <input type="color" name="bgColor" id="bgColorPicker" value="#ffffff">
+                <div class="header">Background</div>
+                <input type="radio" name="background" id="autoBgTod" value="tod" />
+                <label for="autoBgTod">Time of Day</label>
+                <input type="radio" name="background" id="autoBgManual" value="manual" />
+                <label for="autoBgManual">Manual</label>
+                <div id="bgColors">
+                    <div class="header">Background Color</div>
+                    <input type="color" name="bgColor" id="bgColorPicker" value="#ffffff">
+                </div>
                 <div class="header">Font Colors</div>
                 <input type="radio" name="autofontcolor" id="autoFontOn" value="on" />
                 <label for="autoFontOn">Auto</label>
