@@ -17,3 +17,7 @@ Fix bug causing failure in first weather load
 Add current temp in addition to current day min/max temps
 ## 1.0.5
 Add option to set background to a gradient determined by the time of day
+## 1.0.6 
+Change load order to get the background colors in without waiting for weather/location data
+## 1.0.7
+Add current temp to title bar

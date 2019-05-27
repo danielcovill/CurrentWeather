@@ -1,11 +1,13 @@
 {
   "name": "simple",
   "description": "Chrome extension that shows the current time and weather",
-  "dependencies": {},
+  "dependencies": {
+    "g": "^2.0.1"
+  },
   "devDependencies": {
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-cli": "^2.0.1",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.2.0",
     "gulp-copy": "^4.0.1",
     "gulp-csso": "^3.0.1",
     "gulp-minify": "^3.1.0",

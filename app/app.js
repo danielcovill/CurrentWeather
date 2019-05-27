@@ -144,6 +144,7 @@ function refreshWeather(data) {
 
         if(!!data[i].unixUtcDate && new Date().toDateString() === new Date(data[i].unixUtcDate).toDateString()) {
             currentTemp.innerHTML = "Currently: " + Math.round(data[i].currentTemp);
+		  	document.title = "Currently: " + Math.round(data[i].currentTemp) + String.fromCharCode(176);
         } 
         maxTemp.style.display = "inline";
         minTemp.style.display = "inline";
