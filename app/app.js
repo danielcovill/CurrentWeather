@@ -50,12 +50,12 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 initializeApplication();
 
 async function initializeApplication() {
+	await refreshColors();
 	refreshTime();
 	setInterval(refreshTime, 1000);
 
 	// Initialize settings
 	await Settings.initializeSettings(false);
-	await refreshColors();
 	const weatherData = await weather.getWeather();
 	if(weatherData[0] != null) {
 		await updateSolarMovement(weatherData);
