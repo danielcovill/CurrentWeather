@@ -3,7 +3,7 @@ document.querySelectorAll('[data-localize-field]').forEach(element => {
 	let fieldToLocalize = element.getAttribute('data-localize-field');
 	let message = chrome.i18n.getMessage(contentId);
 	if (!!message) {
-		element.setAttribute(fieldToLocalize, contentId);
+		element.setAttribute(fieldToLocalize, message);
 	} else {
 		console.error("Translation error");
 	}
