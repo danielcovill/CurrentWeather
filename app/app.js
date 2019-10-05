@@ -55,6 +55,7 @@ async function initializeApplication() {
 
 	// Initialize settings
 	await Settings.initializeSettings(false);
+	await refreshColors();
 	const weatherData = await weather.getWeather();
 	if(weatherData[0] != null) {
 		await updateSolarMovement(weatherData);
@@ -80,10 +81,6 @@ async function updateSolarMovement(weather) {
 		Settings.setUserSetting("sunrise", sunrise),
 		Settings.setUserSetting("sunset", sunset)
 	]);
-}
-
-function displayError(message) {
-	document.querySelector(".errorMessage").innerHTML = message;
 }
 
 async function refreshColors() {
@@ -202,14 +199,6 @@ function toggleLeftSidebar(showSidebar) {
 		document.querySelector(".left-sidebar").classList.add("hide");
 		document.querySelector(".menu-icon").style.visibility = "visible";
 	}
-}
-
-function padDigits(value) {
-	let result = value.toString();
-	if (result.length == 1) {
-		result = "0" + result;
-	}
-	return result;
 }
 
 async function refreshSettingsPane() {
