@@ -32,67 +32,13 @@
 		"description": "Er is een poging gedaan om een ​​instelling te wijzigen die niet zou moeten bestaan."
 	},
 	"current": {
-		"message": "Huidige"
+		"message": "Actueel"
+	},
+	"currently": {
+		"message": "Tegenwoordig"
 	},
 	"today": {
-		"message": "Vandaag"
-	},
-	"sun": {
-		"message": "zondag"
-	},
-	"mon": {
-		"message": "maandag"
-	},
-	"tue": {
-		"message": "dinsdag"
-	},
-	"wed": {
-		"message": "woensdag"
-	},
-	"thu": {
-		"message": "donderdag"
-	},
-	"fri": {
-		"message": "vrijdag"
-	},
-	"sat": {
-		"message": "zaterdag"
-	},
-	"jan": {
-		"message": "januari"
-	},
-	"feb": {
-		"message": "februari"
-	},
-	"mar": {
-		"message": "maart"
-	},
-	"apr": {
-		"message": "april"
-	},
-	"may": {
-		"message": "mei"
-	},
-	"jun": {
-		"message": "juni"
-	},
-	"jul": {
-		"message": "juli"
-	},
-	"aug": {
-		"message": "augustus"
-	},
-	"sep": {
-		"message": "september"
-	},
-	"oct": {
-		"message": "oktober"
-	},
-	"nov": {
-		"message": "november"
-	},
-	"dec": {
-		"message": "december"
+		"message": "vandaag"
 	},
 	"preferences": {
 		"message": "Voorkeuren"

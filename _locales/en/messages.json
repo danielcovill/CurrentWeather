@@ -34,65 +34,11 @@
 	"current": {
 		"message": "Current"
 	},
+	"currently": {
+		"message": "Currently"
+	},
 	"today": {
 		"message": "Today"
-	},
-	"sun": {
-		"message": "Sunday"
-	},
-	"mon": {
-		"message": "Monday"
-	},
-	"tue": {
-		"message": "Tuesday"
-	},
-	"wed": {
-		"message": "Wednesday"
-	},
-	"thu": {
-		"message": "Thursday"
-	},
-	"fri": {
-		"message": "Friday"
-	},
-	"sat": {
-		"message": "Saturday"
-	},
-	"jan": {
-		"message": "January"
-	},
-	"feb": {
-		"message": "February"
-	},
-	"mar": {
-		"message": "March"
-	},
-	"apr": {
-		"message": "April"
-	},
-	"may": {
-		"message": "May"
-	},
-	"jun": {
-		"message": "June"
-	},
-	"jul": {
-		"message": "July"
-	},
-	"aug": {
-		"message": "August"
-	},
-	"sep": {
-		"message": "September"
-	},
-	"oct": {
-		"message": "October"
-	},
-	"nov": {
-		"message": "November"
-	},
-	"dec": {
-		"message": "December"
 	},
 	"preferences": {
 		"message": "Preferences"

@@ -1,57 +1,35 @@
 class WeatherDay {
-    constructor(unixUtcDate, location, weatherId, currentTemp, minTemp, maxTemp, icon, description, sunriseUTC, sunsetUTC, windDirection, windSpeeed, windGust) {
-        this.unixUtcDate = unixUtcDate;
-        this.location = location;
-        this.weatherId = weatherId;
-        this.currentTemp = currentTemp;
-        this.minTemp = minTemp;
-        this.maxTemp = maxTemp;
-        this.icon = icon;
-        this.description = description;
-        this.sunriseUTC = sunriseUTC;
-        this.sunsetUTC = sunsetUTC;
-        this.wind = {
-            direction: windDirection,
-            speed: windSpeeed,
-            gust: windGust
-        };
-    }
+	constructor(unixUtcDate, location, weatherId, currentTemp, minTemp, maxTemp, icon, description, sunriseUTC, sunsetUTC, windDirection, windSpeeed, windGust) {
+		this.unixUtcDate = unixUtcDate;
+		this.location = location;
+		this.weatherId = weatherId;
+		this.currentTemp = currentTemp;
+		this.minTemp = minTemp;
+		this.maxTemp = maxTemp;
+		this.icon = icon;
+		this.description = description;
+		this.sunriseUTC = sunriseUTC;
+		this.sunsetUTC = sunsetUTC;
+		this.wind = {
+			direction: windDirection,
+			speed: windSpeeed,
+			gust: windGust
+		};
+	}
 
-    get Date() {
-        return new Date(this.unixUtcDate);
-    }
+	get Date() {
+		return new Date(this.unixUtcDate);
+	}
 
-    get FriendlyDay() {
-        let d = new Date(this.unixUtcDate);
-        let result = "";
-        if(d.toDateString() == new Date().toDateString()) {
-            result = "today";
-        } else {
-            switch(d.getDay()) {
-                case 0:
-                    result = "sun";
-                    break;
-                case 1:
-                    result = "mon";
-                    break;
-                case 2:
-                    result = "tue";
-                    break;
-                case 3:
-                    result = "wed";
-                    break;
-                case 4:
-                    result = "thu";
-                    break;
-                case 5:
-                    result = "fri";
-                    break;
-                case 6:
-                    result = "sat";
-                    break;
-            }
-        }
-        return chrome.i18n.getMessage(result);
-    }
+	get FriendlyDay() {
+		let d = new Date(this.unixUtcDate);
+		let result = "";
+		if (d.toDateString() == new Date().toDateString()) {
+			result = chrome.i18n.getMessage("today");
+		} else {
+			result = d.toLocaleDateString(undefined, { weekday: "long" });
+		}
+		return result;
+	}
 }
 export default WeatherDay;
