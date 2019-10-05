@@ -21,3 +21,6 @@ Add option to set background to a gradient determined by the time of day
 Change load order to get the background colors in without waiting for weather/location data
 ## 1.0.7
 Add current temp to title bar
+## 1.0.8
+Add explicit Dutch support (settings translated)
+Add implicit support for most other locales (primary view translated, settings still in english)
