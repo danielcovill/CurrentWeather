@@ -52,6 +52,7 @@ initializeApplication();
 async function initializeApplication() {
 	await refreshColors();
 	refreshTime();
+	refreshDate();
 	setInterval(refreshTime, 1000);
 
 	// Initialize settings
@@ -67,7 +68,6 @@ async function initializeApplication() {
 		refreshSettingsPane(),
 		refreshColors()
 	]);
-	refreshDate();
 	let finalData = await weatherData;
 	if(finalData[0] != null) {
 		refreshWeather(finalData);
