@@ -1,0 +1,160 @@
+{
+	"application_title": {
+		"message": "Huidig weer",
+		"description": "De titel van de applicatie, weergegeven in de webwinkel."
+	},
+	"application_description": {
+		"message": "Chrome-extensie die de huidige tijd en het weer toont.",
+		"description": "De gebruiker heeft toestemming geweigerd voor de toepassing om Geolocation te gebruiken."
+	},
+	"error_localization_user_denied": {
+		"message": "Gebruiker heeft de aanvraag voor geolocatie geweigerd.",
+		"description": "De gebruiker heeft de toestemming geweigerd voor de toepassing om Geolocation te gebruiken."
+	},
+	"error_localization_location_unavailable": {
+		"message": "Locatie-informatie is momenteel niet beschikbaar.",
+		"description": "De app kan momenteel geen locatie-informatie ophalen."
+	},
+	"error_localization_timeout": {
+		"message": "Er is een time-out opgetreden voor het systeem tijdens het zoeken naar locatie-informatie.",
+		"description": "Het aanvraagverzoek voor locatie-informatie heeft de wachttijdlimiet overschreden."
+	},
+	"error_localization_generic": {
+		"message": "Er is een onbekende fout opgetreden bij het verzamelen van locatiegegevens.",
+		"description": "Het aanvraagverzoek voor locatie-informatie is om een ​​onbekende reden mislukt."
+	},
+	"error_invalid_setting_option": {
+		"message": "Instellingsoptie ongeldig.",
+		"description": "Er is geprobeerd een instelling te wijzigen in een ongeldige waarde."
+	},
+	"error_invalid_setting": {
+		"message": "Instelling bestaat niet.",
+		"description": "Er is een poging gedaan om een ​​instelling te wijzigen die niet zou moeten bestaan."
+	},
+	"current": {
+		"message": "Huidige"
+	},
+	"today": {
+		"message": "Vandaag"
+	},
+	"sun": {
+		"message": "zondag"
+	},
+	"mon": {
+		"message": "maandag"
+	},
+	"tue": {
+		"message": "dinsdag"
+	},
+	"wed": {
+		"message": "woensdag"
+	},
+	"thu": {
+		"message": "donderdag"
+	},
+	"fri": {
+		"message": "vrijdag"
+	},
+	"sat": {
+		"message": "zaterdag"
+	},
+	"jan": {
+		"message": "januari"
+	},
+	"feb": {
+		"message": "februari"
+	},
+	"mar": {
+		"message": "maart"
+	},
+	"apr": {
+		"message": "april"
+	},
+	"may": {
+		"message": "mei"
+	},
+	"jun": {
+		"message": "juni"
+	},
+	"jul": {
+		"message": "juli"
+	},
+	"aug": {
+		"message": "augustus"
+	},
+	"sep": {
+		"message": "september"
+	},
+	"oct": {
+		"message": "oktober"
+	},
+	"nov": {
+		"message": "november"
+	},
+	"dec": {
+		"message": "december"
+	},
+	"preferences": {
+		"message": "Voorkeuren"
+	},
+	"hours_display": {
+		"message": "Uren Weergave"
+	},
+	"seconds_display": {
+		"message": "Seconden Weergave"
+	},
+	"12_hour": {
+		"message": "12 uur"
+	},
+	"24_hour": {
+		"message": "24 uur"
+	},
+	"show": {
+		"message": "Tonen"
+	},
+	"hide": {
+		"message": "Verbergen"
+	},
+	"location": {
+		"message": "Plaats"
+	},
+	"auto_detect": {
+		"message": "Automatische detectie"
+	},
+	"location_instructions": {
+		"message": "Voer postcode in of laat leeg om automatisch te detecteren"
+	},
+	"temperature_units": {
+		"message": "Meeteenheden"
+	},
+	"imperial_temp": {
+		"message": "US (F)"
+	},
+	"metric_temp": {
+		"message": "SI (C)"
+	},
+	"background": {
+		"message": "Achtergrond"
+	},
+	"time_of_day": {
+		"message": "Tijdstip"
+	},
+	"background_color": {
+		"message": "Achtergrond kleur"
+	},
+	"font_colors": {
+		"message": "Letterkleur"
+	},
+	"primary_font_color": {
+		"message": "Primaire letterkleur"
+	},
+	"secondary_font_color": {
+		"message": "Secundaire letterkleur"
+	},
+	"auto": {
+		"message": "auto"
+	},
+	"manual": {
+		"message": "handleiding"
+	}
+}

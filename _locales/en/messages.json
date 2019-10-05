@@ -1,97 +1,160 @@
 {
-    "application_title": {
-      "message": "Current Weather",
-      "description": "The title of the application, displayed in the web store."
-    },
-    "application_description": {
-      "message": "Chrome extension that shows the current time and weather",
-      "description": "The description of the application, displayed in the web store."
-    },
-    "error_localization_user_denied": {
-      "message": "User denied the request for Geolocation.",
-      "description": "The user denied permission for the application to use Geolocation"
-    },
-    "error_localization_location_unavailable": {
-      "message": "Location information is unavailable at this time.",
-      "description": "The application isn't currently able to get location information."
-    },
-    "error_localization_timeout": {
-      "message": "System timed out while seeking location information.",
-      "description": "The application request for location information exceeded the wait time limit."
-    },
-    "error_localization_generic": {
-      "message": "An unknown error occurred while attempting to gather location information.",
-      "description": "The application request for location information failed for an unknown reason."
-    },
-    "error_invalid_setting_option": {
-      "message": "Setting option invalid.",
-      "description": "There was an attempt to change a setting to an invalid value."
-    },
-    "error_invalid_setting": {
-      "message": "Setting does not exist.",
-      "description": "There was an attempt to change a setting that shouldn't exist."
-    },
-    "current": {
-      "message": "Current"
-    },
-    "today": {
-      "message": "Today"
-    },
-    "sun": {
-      "message": "Sunday"
-    },
-    "mon": {
-      "message": "Monday"
-    },
-    "tue": {
-      "message": "Tuesday"
-    },
-    "wed": {
-      "message": "Wednesday"
-    },
-    "thu": {
-      "message": "Thursday"
-    },
-    "fri": {
-      "message": "Friday"
-    },
-    "sat": {
-      "message": "Saturday"
-    },
-    "jan": {
-      "message": "January"
-    },
-    "feb": {
-      "message": "February"
-    },
-    "mar": {
-      "message": "March"
-    },
-    "apr": {
-      "message": "April"
-    },
-    "may": {
-      "message": "May"
-    },
-    "jun": {
-      "message": "June"
-    },
-    "jul": {
-      "message": "July"
-    },
-    "aug": {
-      "message": "August"
-    },
-    "sep": {
-      "message": "September"
-    },
-    "oct": {
-      "message": "October"
-    },
-    "nov": {
-      "message": "November"
-    },
-    "dec": {
-      "message": "December"
-    }
+	"application_title": {
+		"message": "Current Weather",
+		"description": "The title of the application, displayed in the web store."
+	},
+	"application_description": {
+		"message": "Chrome extension that shows the current time and weather",
+		"description": "The description of the application, displayed in the web store."
+	},
+	"error_localization_user_denied": {
+		"message": "User denied the request for Geolocation.",
+		"description": "The user denied permission for the application to use Geolocation"
+	},
+	"error_localization_location_unavailable": {
+		"message": "Location information is unavailable at this time.",
+		"description": "The application isn't currently able to get location information."
+	},
+	"error_localization_timeout": {
+		"message": "System timed out while seeking location information.",
+		"description": "The application request for location information exceeded the wait time limit."
+	},
+	"error_localization_generic": {
+		"message": "An unknown error occurred while attempting to gather location information.",
+		"description": "The application request for location information failed for an unknown reason."
+	},
+	"error_invalid_setting_option": {
+		"message": "Setting option invalid.",
+		"description": "There was an attempt to change a setting to an invalid value."
+	},
+	"error_invalid_setting": {
+		"message": "Setting does not exist.",
+		"description": "There was an attempt to change a setting that shouldn't exist."
+	},
+	"current": {
+		"message": "Current"
+	},
+	"today": {
+		"message": "Today"
+	},
+	"sun": {
+		"message": "Sunday"
+	},
+	"mon": {
+		"message": "Monday"
+	},
+	"tue": {
+		"message": "Tuesday"
+	},
+	"wed": {
+		"message": "Wednesday"
+	},
+	"thu": {
+		"message": "Thursday"
+	},
+	"fri": {
+		"message": "Friday"
+	},
+	"sat": {
+		"message": "Saturday"
+	},
+	"jan": {
+		"message": "January"
+	},
+	"feb": {
+		"message": "February"
+	},
+	"mar": {
+		"message": "March"
+	},
+	"apr": {
+		"message": "April"
+	},
+	"may": {
+		"message": "May"
+	},
+	"jun": {
+		"message": "June"
+	},
+	"jul": {
+		"message": "July"
+	},
+	"aug": {
+		"message": "August"
+	},
+	"sep": {
+		"message": "September"
+	},
+	"oct": {
+		"message": "October"
+	},
+	"nov": {
+		"message": "November"
+	},
+	"dec": {
+		"message": "December"
+	},
+	"preferences": {
+		"message": "Preferences"
+	},
+	"hours_display": {
+		"message": "Hours Display"
+	},
+	"seconds_display": {
+		"message": "Seconds Display"
+	},
+	"12_hour": {
+		"message": "12 Hour"
+	},
+	"24_hour": {
+		"message": "24 Hour"
+	},
+	"show": {
+		"message": "Show"
+	},
+	"hide": {
+		"message": "Hide"
+	},
+	"location": {
+		"message": "Location"
+	},
+	"auto_detect": {
+		"message": "auto-detect"
+	},
+	"location_instructions": {
+		"message": "Enter zip code or leave blank to detect automatically"
+	},
+	"temperature_units": {
+		"message": "Temperature Units"
+	},
+	"imperial_temp": {
+		"message": "Imperial (F)"
+	},
+	"metric_temp": {
+		"message": "Metric (C)"
+	},
+	"background": {
+		"message": "Background"
+	},
+	"time_of_day": {
+		"message": "Time of Day"
+	},
+	"background_color": {
+		"message": "Background Color"
+	},
+	"font_colors": {
+		"message": "Font Colors"
+	},
+	"primary_font_color": {
+		"message": "Primary Font Color"
+	},
+	"secondary_font_color": {
+		"message": "Secondary Font Color"
+	},
+	"auto": {
+		"message": "auto"
+	},
+	"manual": {
+		"message": "manual"
+	}
 }
