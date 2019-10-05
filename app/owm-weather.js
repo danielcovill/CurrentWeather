@@ -21,25 +21,34 @@ class OpenWeatherMap {
     static getWeather(todayUrl, futureUrl) {
         let todayPromise = new Promise((resolve, reject) => {
             this.apiCallHandler(todayUrl, (result) => {
-                resolve(new WeatherDay(
-                    Date.parse(new Date()),
-                    result.name,
-                    result.weather[0].id,
-                    result.main.temp,
-                    result.main.temp_min,
-                    result.main.temp_max,
-                    result.weather[0].icon,
-                    result.weather[0].description,
-                    result.sys.sunrise,
-                    result.sys.sunset,
-                    result.wind.deg,
-                    result.wind.speed,
-                    result.wind.gust
-                ));
-            });
-        });
+								if(result === null) {
+									//error state
+									resolve(null);
+								} else {
+									resolve(new WeatherDay(
+											Date.parse(new Date()),
+											result.name,
+											result.weather[0].id,
+											result.main.temp,
+											result.main.temp_min,
+											result.main.temp_max,
+											result.weather[0].icon,
+											result.weather[0].description,
+											result.sys.sunrise,
+											result.sys.sunset,
+											result.wind.deg,
+											result.wind.speed,
+											result.wind.gust
+									));
+								}
+							});
+					});
         let futurePromise = new Promise((resolve, reject) => {
             this.apiCallHandler(futureUrl, (result) => {
+							if(result === null) {
+								//error state
+								resolve(null);
+							} else {
                 let d = new Date();
                 let weatherDays = [];
 
@@ -80,7 +89,8 @@ class OpenWeatherMap {
                     }
                 });
 
-                resolve(weatherDays);
+								resolve(weatherDays);
+							}
             });
         });
         return Promise.all([todayPromise, futurePromise]).then((resultArray) => {
@@ -102,7 +112,8 @@ class OpenWeatherMap {
                 let responseData = JSON.parse(this.responseText);
                 callback(responseData);
             } else if (this.readyState == XMLHttpRequest.DONE) {
-                throw this.status;
+								console.error("Error retrieving weather data, status: " + this.status);
+								callback(null);
             }
         };
     }

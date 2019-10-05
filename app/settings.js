@@ -127,7 +127,7 @@ class Settings {
     }
 
     static async refreshCoordinates() {
-        const position = await new Promise((resolve) => { 
+        const position = await new Promise((resolve, reject) => { 
             navigator.geolocation.getCurrentPosition((result) => {
                 resolve(result);
             }, 

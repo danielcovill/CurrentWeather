@@ -37,8 +37,10 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 		case "zip":
 		case "units":
 			weatherData = await weather.getWeather();
-			await updateSolarMovement(weatherData);
-			refreshWeather(weatherData);
+			if(weatherData[0] != null) {
+				await updateSolarMovement(weatherData);
+				refreshWeather(weatherData);
+			}
 			break;
 		default:
 			break;
@@ -54,7 +56,9 @@ async function initializeApplication() {
 	// Initialize settings
 	await Settings.initializeSettings(false);
 	const weatherData = await weather.getWeather();
-	await updateSolarMovement(weatherData);
+	if(weatherData[0] != null) {
+		await updateSolarMovement(weatherData);
+	}
 
 	// Set up UI and refresh necessary UI elements
 	toggleLeftSidebar(location.hash == "#settings");
@@ -64,7 +68,9 @@ async function initializeApplication() {
 	]);
 	refreshDate();
 	let finalData = await weatherData;
-	refreshWeather(finalData);
+	if(finalData[0] != null) {
+		refreshWeather(finalData);
+	}
 }
 
 async function updateSolarMovement(weather) {
@@ -144,6 +150,7 @@ function refreshWeather(data) {
 
 		if (!!data[i].unixUtcDate && new Date().toDateString() === new Date(data[i].unixUtcDate).toDateString()) {
 			currentTemp.innerHTML = chrome.i18n.getMessage("currently") + ": " + Math.round(data[i].currentTemp);
+			currentTemp.classList.add("currentTempLoaded");
 			document.title = chrome.i18n.getMessage("currently") + ": " + Math.round(data[i].currentTemp) + String.fromCharCode(176);
 		}
 		maxTemp.style.display = "inline";

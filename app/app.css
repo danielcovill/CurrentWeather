@@ -223,7 +223,7 @@ input[type="radio"] {
 .currentTemp {
     margin-top: .5em;
 }
-.currentTemp::after {
+.currentTempLoaded::after {
     content: "\00B0";
 }
 .content .weather .forecast .day .wi {
