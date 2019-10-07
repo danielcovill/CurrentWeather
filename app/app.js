@@ -6,16 +6,11 @@ const weather = new Weather(OpenWeatherMap);
 document.getElementById("left-sidebar-toggle").addEventListener("click", () => {
 	toggleLeftSidebar(true);
 });
-document.getElementById("left-sidebar-close").addEventListener("click", async () => {
+document.getElementById("left-sidebar-close").addEventListener("click", () => {
 	toggleLeftSidebar(false);
-	await Settings.refreshCoordinates();
-	try {
-		let weatherData = await weather.getWeather();
-		await updateSolarMovement(weatherData);
-		refreshWeather(weatherData);
-	} catch (err) {
-		console.log("Can not refresh data: " + err)
-	}
+});
+document.getElementById("primary-content").addEventListener("click", () => {
+	toggleLeftSidebar(false);
 });
 document.getElementById("settingsForm").addEventListener("submit", async (event) => {
 	event.preventDefault();
@@ -213,7 +208,7 @@ async function refreshTime() {
 	document.querySelector(".time").innerHTML = time;
 }
 
-function toggleLeftSidebar(showSidebar) {
+async function toggleLeftSidebar(showSidebar) {
 	if (showSidebar) {
 		document.querySelector(".menu-icon").style.visibility = "hidden";
 		document.querySelector(".left-sidebar").classList.remove("hide");
@@ -222,6 +217,14 @@ function toggleLeftSidebar(showSidebar) {
 		document.querySelector(".left-sidebar").classList.remove("show");
 		document.querySelector(".left-sidebar").classList.add("hide");
 		document.querySelector(".menu-icon").style.visibility = "visible";
+		await Settings.refreshCoordinates();
+		try {
+			let weatherData = await weather.getWeather();
+			await updateSolarMovement(weatherData);
+			refreshWeather(weatherData);
+		} catch (err) {
+			console.log("Can not refresh data: " + err)
+		}
 	}
 }
 

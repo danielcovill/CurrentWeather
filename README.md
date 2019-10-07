@@ -30,3 +30,5 @@ Open settings panel on first load to help new users and address google concerns 
 ## 1.0.10 
 Fix issue that caused some users to lose their preferences and rever to default
 Add cookie based "initialized" setting allowing for faster load
+## 1.0.11
+Clicking off the sidebar now closes it (you don't have to hit the X unless you want to)
