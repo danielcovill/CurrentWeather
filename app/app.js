@@ -6,7 +6,15 @@ const weather = new Weather(OpenWeatherMap);
 document.getElementById("left-sidebar-toggle").addEventListener("click", () => {
 	toggleLeftSidebar(true);
 });
-document.getElementById("left-sidebar-close").addEventListener("click", () => {
+document.getElementById("left-sidebar-close").addEventListener("click", async () => {
+	await Settings.refreshCoordinates();
+	try {
+		let weatherData = await weather.getWeather();
+		await updateSolarMovement(weatherData);
+		refreshWeather(weatherData);
+	} catch (err) {
+		console.log("Can not refresh data: " + err)
+	}
 	toggleLeftSidebar(false);
 });
 document.getElementById("settingsForm").addEventListener("submit", async (event) => {
@@ -22,8 +30,12 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 			break;
 		case "autofontcolor":
 		case "background":
-			weatherData = await weather.getWeather();
-			await updateSolarMovement(weatherData);
+			try {
+				weatherData = await weather.getWeather();
+				await updateSolarMovement(weatherData);
+			} catch (err) {
+				console.log("Can not refresh data: " + err)
+			}
 			await Promise.all([
 				refreshSettingsPane(),
 				refreshColors()
@@ -36,10 +48,12 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 			break;
 		case "zip":
 		case "units":
-			weatherData = await weather.getWeather();
-			if(weatherData[0] != null) {
+			try {
+				weatherData = await weather.getWeather();
 				await updateSolarMovement(weatherData);
 				refreshWeather(weatherData);
+			} catch (err) {
+				console.log("Can not refresh data: " + err)
 			}
 			break;
 		default:
@@ -55,15 +69,24 @@ async function initializeApplication() {
 	refreshDate();
 	setInterval(refreshTime, 1000);
 
+	toggleLeftSidebar(location.hash == "#settings");
+
 	// Initialize settings
-	await Settings.initializeSettings(false);
-	const weatherData = await weather.getWeather();
+	await Settings.SetDefaultUserSettings();
+	let weatherData = [null, null];
+	try {
+		weatherData = await weather.getWeather();
+	} catch (err) {
+		if (err === "No Location Data") {
+			console.log("Prompt user for input on location");
+			toggleLeftSidebar(true);
+		}
+	}
 	if(weatherData[0] != null) {
 		await updateSolarMovement(weatherData);
 	}
 
 	// Set up UI and refresh necessary UI elements
-	toggleLeftSidebar(location.hash == "#settings");
 	await Promise.all([
 		refreshSettingsPane(),
 		refreshColors()
@@ -177,10 +200,10 @@ async function refreshTime() {
 	});
 	let dateTime = new Date();
 	let time = dateTime.toLocaleTimeString(undefined, {
-		hour12: (syncResult.clockVersion == 12),
-		hour:  (syncResult.clockVersion == 12) ? "numeric" : "2-digit",
+		hour12: syncResult.clockVersion == 12 || syncResult.clockVersion == undefined,
+		hour: syncResult.clockVersion == 12 || syncResult.clockVersion == undefined ? "numeric" : "2-digit",
 		minute: "2-digit",
-		second: (syncResult.showSeconds) ? "2-digit" : undefined
+		second: syncResult.showSeconds || syncResult.showSeconds == undefined ? "2-digit" : undefined
 	}).replace(/\./g, "").toUpperCase();
 	
 	if (dateTime.getHours() == 0 && dateTime.getMinutes() == 0 && dateTime.getSeconds() == 0) {
