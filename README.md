@@ -27,3 +27,6 @@ Add implicit support for most other locales (primary view translated, settings s
 ## 1.0.9
 Optimize loading for snappier user experience
 Open settings panel on first load to help new users and address google concerns around unprompted use of geolocation
+## 1.0.10 
+Fix issue that caused some users to lose their preferences and rever to default
+Add cookie based "initialized" setting allowing for faster load

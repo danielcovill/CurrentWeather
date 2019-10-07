@@ -64,6 +64,7 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 initializeApplication();
 
 async function initializeApplication() {
+	await Settings.SetDefaultUserSettings(false);
 	await refreshColors();
 	refreshTime();
 	refreshDate();
@@ -72,17 +73,17 @@ async function initializeApplication() {
 	toggleLeftSidebar(location.hash == "#settings");
 
 	// Initialize settings
-	await Settings.SetDefaultUserSettings();
+
 	let weatherData = [null, null];
 	try {
 		weatherData = await weather.getWeather();
 	} catch (err) {
 		if (err === "No Location Data") {
-			console.log("Prompt user for input on location");
+
 			toggleLeftSidebar(true);
 		}
 	}
-	if(weatherData[0] != null) {
+	if (weatherData[0] != null) {
 		await updateSolarMovement(weatherData);
 	}
 
@@ -92,7 +93,7 @@ async function initializeApplication() {
 		refreshColors()
 	]);
 	let finalData = await weatherData;
-	if(finalData[0] != null) {
+	if (finalData[0] != null) {
 		refreshWeather(finalData);
 	}
 }
@@ -205,7 +206,7 @@ async function refreshTime() {
 		minute: "2-digit",
 		second: syncResult.showSeconds || syncResult.showSeconds == undefined ? "2-digit" : undefined
 	}).replace(/\./g, "").toUpperCase();
-	
+
 	if (dateTime.getHours() == 0 && dateTime.getMinutes() == 0 && dateTime.getSeconds() == 0) {
 		refreshDate();
 	}

@@ -50,12 +50,20 @@ class Settings {
 		return `linear-gradient(0deg, hsl(${h1}, 100%, ${l1}%) 0%, hsl(${h2}, 100%, ${l2}%) 100%)`;
 	}
 
-	static async SetDefaultUserSettings() {
+	static async SetDefaultUserSettings(forceReset) {
+		if((document.cookie == "initialized") && !forceReset) { return Promise.resolve(); }
+
+		chrome.storage.sync.get(['initialized'], (result) => {
+			if(result.initialized) {
+				document.cookie = "initialized";
+			} 
+		});
+
+		if((document.cookie == "initialized") && !forceReset) { return Promise.resolve(); }
+
 		return Promise.all([
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ initialized: true }, () => {
-					resolve();
-				});
+				resolve(document.cookie = "initialized");
 			}),
 			new Promise((resolve) => {
 				chrome.storage.sync.set({ clockVersion: '12' }, () => {
