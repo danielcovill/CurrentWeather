@@ -1,6 +1,3 @@
-# Address Chrome security changes around location
-Add some kind of user interaction prior to trying to gather location. Chrome is probably changing this soon
-
 # Secondary Clock
 Add a secondary timezone that is displayed to the user 
 

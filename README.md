@@ -24,3 +24,6 @@ Add current temp to title bar
 ## 1.0.8
 Add explicit Dutch support (settings translated)
 Add implicit support for most other locales (primary view translated, settings still in english)
+## 1.0.9
+Optimize loading for snappier user experience
+Open settings panel on first load to help new users and address google concerns around unprompted use of geolocation
