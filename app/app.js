@@ -7,6 +7,7 @@ document.getElementById("left-sidebar-toggle").addEventListener("click", () => {
 	toggleLeftSidebar(true);
 });
 document.getElementById("left-sidebar-close").addEventListener("click", async () => {
+	toggleLeftSidebar(false);
 	await Settings.refreshCoordinates();
 	try {
 		let weatherData = await weather.getWeather();
@@ -15,7 +16,6 @@ document.getElementById("left-sidebar-close").addEventListener("click", async ()
 	} catch (err) {
 		console.log("Can not refresh data: " + err)
 	}
-	toggleLeftSidebar(false);
 });
 document.getElementById("settingsForm").addEventListener("submit", async (event) => {
 	event.preventDefault();

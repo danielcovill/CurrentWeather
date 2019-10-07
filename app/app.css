@@ -1,36 +1,6 @@
 @font-face {
-    font-family: "HelveticaNeueUltraLightCondensed";
-    src: url("../fonts/HelveticaNeue-UltraLigCond.otf") format("opentype");
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: "HelveticaNeueUltraLightCondensedOblique";
-    src: url("../fonts/HelveticaNeue-UltraLigCondObl.otf") format("opentype");
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
     font-family: "HelveticaNeueUltraLight";
     src: url("../fonts/HelveticaNeue-UltraLight.otf") format("opentype");
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: "HelveticaNeueUltraLightItalic";
-    src: url("../fonts/HelveticaNeue-UltraLightItal.otf") format("opentype");
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: "HelveticaNeueUltraLightExtended";
-    src: url("../fonts/HelveticaNeue-UltraLigExt.otf") format("opentype");
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: "HelveticaNeueUltraLightExtendedOblique";
-    src: url("../fonts/HelveticaNeue-UltraLigExtObl.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
