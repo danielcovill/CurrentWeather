@@ -50,70 +50,105 @@ class Settings {
 		return `linear-gradient(0deg, hsl(${h1}, 100%, ${l1}%) 0%, hsl(${h2}, 100%, ${l2}%) 100%)`;
 	}
 
+
+	//rather than using the initialized field, I think what I'm going to do is just manually check all the settings
 	static async SetDefaultUserSettings(forceReset) {
-		if((document.cookie == "initialized") && !forceReset) { return Promise.resolve(); }
-
-		chrome.storage.sync.get(['initialized'], (result) => {
-			if(result.initialized) {
-				document.cookie = "initialized";
-			} 
+		let settingsResult = await new Promise((resolve) => {
+			chrome.storage.sync.get([
+				'clockVersion',
+				'location',
+				'background',
+				'backgroundColor',
+				'autoFontColor',
+				'primaryFontColor',
+				'secondaryFontColor',
+				'showSeconds',
+				'units'
+			], (result) => {
+				resolve(result);
+			});
 		});
-
-		if((document.cookie == "initialized") && !forceReset) { return Promise.resolve(); }
-
 		return Promise.all([
 			new Promise((resolve) => {
-				resolve(document.cookie = "initialized");
+				if(forceReset || settingsResult.clockVersion === undefined) {
+					chrome.storage.sync.set({ clockVersion: '12' }, () => {
+						resolve();
+					});
+				} else {
+					resolve();
+				}
 			}),
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ clockVersion: '12' }, () => {
+				if(forceReset || settingsResult.location === undefined) {
+					chrome.storage.sync.set({ location: '' }, () => {
+						resolve();
+					});
+				} else {
 					resolve();
-				});
+				}
 			}),
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ location: '' }, () => {
+				if(forceReset || settingsResult.primaryFontColor === undefined) {
+					chrome.storage.sync.set({ primaryFontColor: '#EEEEEE' }, () => {
+						resolve();
+					});
+				} else {
 					resolve();
-				});
+				}
 			}),
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ dateFormat: 'US' }, () => {
+				if(forceReset || settingsResult.secondaryFontColor === undefined) {
+					chrome.storage.sync.set({ secondaryFontColor: '#666666' }, () => {
+						resolve();
+					});
+				} else {
 					resolve();
-				});
+				}
 			}),
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ primaryFontColor: '#EEEEEE' }, () => {
+				if(forceReset || settingsResult.background === undefined ) {
+					chrome.storage.sync.set({ background: 'manual' }, () => {
+						resolve();
+					});
+				} else {
 					resolve();
-				});
+				}
 			}),
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ secondaryFontColor: '#666666' }, () => {
+				if(forceReset || settingsResult.backgroundColor === undefined) {
+					chrome.storage.sync.set({ backgroundColor: '#005493' }, () => {
+						resolve();
+					});
+				} else {
 					resolve();
-				});
+				}
 			}),
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ background: 'manual' }, () => {
+				if(forceReset || settingsResult.autoFontColor === undefined) {
+					chrome.storage.sync.set({ autoFontColor: true }, () => {
+						resolve();
+					});
+				} else {
 					resolve();
-				});
+				}
 			}),
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ backgroundColor: '#005493' }, () => {
+				if(forceReset || settingsResult.showSeconds === undefined) {
+					chrome.storage.sync.set({ showSeconds: true }, () => {
+						resolve();
+					});
+				} else {
 					resolve();
-				});
+				}
 			}),
 			new Promise((resolve) => {
-				chrome.storage.sync.set({ autoFontColor: true }, () => {
+				if(forceReset || settingsResult.units === undefined) {
+					chrome.storage.sync.set({ units: 'metric' }, () => {
+						resolve();
+					});
+				} else {
 					resolve();
-				});
-			}),
-			new Promise((resolve) => {
-				chrome.storage.sync.set({ showSeconds: true }, () => {
-					resolve();
-				});
-			}),
-			new Promise((resolve) => {
-				chrome.storage.sync.set({ units: 'metric' }, () => {
-					resolve();
-				});
+				}
 			})
 		]);
 	}
