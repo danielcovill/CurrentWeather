@@ -233,7 +233,6 @@ async function refreshSettingsPane() {
 		chrome.storage.sync.get([
 			'clockVersion',
 			'location',
-			'dateFormat',
 			'background',
 			'backgroundColor',
 			'autoFontColor',
