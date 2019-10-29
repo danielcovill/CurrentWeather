@@ -67,8 +67,6 @@ async function initializeApplication() {
 
 	toggleLeftSidebar(location.hash == "#settings");
 
-	// Initialize settings
-
 	let weatherData = [null, null];
 	try {
 		weatherData = await weather.getWeather();
@@ -87,10 +85,10 @@ async function initializeApplication() {
 		refreshSettingsPane(),
 		refreshColors()
 	]);
-	let finalData = await weatherData;
-	if (finalData[0] != null) {
-		refreshWeather(finalData);
-	}
+	//let finalData = await weatherData;
+	//if (finalData[0] != null) {
+	//	refreshWeather(finalData);
+	//}
 }
 
 async function updateSolarMovement(weather) {

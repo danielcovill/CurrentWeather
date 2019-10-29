@@ -39,3 +39,6 @@ I think the way I'm doing this may be janky... I should review
 
 ## Debounce the color picker
 Chrome lets you slide the color picker all over and it ends up timing out because I'm updating webstorage way too fast.
+
+## Why doesn't "settings" work anymore?
+When clicking the app icon it used to open the sidebar, not anymore...
