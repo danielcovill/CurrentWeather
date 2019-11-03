@@ -22,7 +22,7 @@ class OpenWeatherMap {
         let todayPromise = new Promise((resolve, reject) => {
             this.apiCallHandler(todayUrl, (result) => {
 								if(result === null) {
-									//error state
+									//error state //TODO: This probably shouldn't resolve. Should reject
 									resolve(null);
 								} else {
 									resolve(new WeatherDay(

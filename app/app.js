@@ -44,7 +44,7 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 		case "zip":
 		case "units":
 			try {
-				weatherData = await weather.getWeather();
+				weatherData = await weather.getWeather(true);
 				await updateSolarMovement(weatherData);
 				refreshWeather(weatherData);
 			} catch (err) {
@@ -65,19 +65,19 @@ async function initializeApplication() {
 	refreshDate();
 	setInterval(refreshTime, 1000);
 
-	toggleLeftSidebar(location.hash == "#settings");
+	if(location.hash == "#settings") {
+		toggleLeftSidebar(true);
+	}
 
-	let weatherData = [null, null];
-	try {
-		weatherData = await weather.getWeather();
-	} catch (err) {
+	let weatherData = await weather.getWeather()
+	.catch((err) => {
 		if (err === "No Location Data") {
-
 			toggleLeftSidebar(true);
 		}
-	}
-	if (weatherData[0] != null) {
+	});
+	if (!!weatherData) {
 		await updateSolarMovement(weatherData);
+		refreshWeather(weatherData);
 	}
 
 	// Set up UI and refresh necessary UI elements
@@ -85,10 +85,6 @@ async function initializeApplication() {
 		refreshSettingsPane(),
 		refreshColors()
 	]);
-	//let finalData = await weatherData;
-	//if (finalData[0] != null) {
-	//	refreshWeather(finalData);
-	//}
 }
 
 async function updateSolarMovement(weather) {
@@ -217,7 +213,7 @@ async function toggleLeftSidebar(showSidebar) {
 		document.querySelector(".menu-icon").style.visibility = "visible";
 		await Settings.refreshCoordinates();
 		try {
-			let weatherData = await weather.getWeather();
+			let weatherData = await weather.getWeather(true);
 			await updateSolarMovement(weatherData);
 			refreshWeather(weatherData);
 		} catch (err) {

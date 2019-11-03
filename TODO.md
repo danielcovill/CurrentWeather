@@ -28,17 +28,20 @@ Put the "todo list" into the settings area as a tab so people can see what's com
 
 #Necessary items
 
-## Weather caching
-Need to reduce the number of hits to weather API
-
-## Review cookie "initialized" method 
-Built this out way too fast when a bug was found. Should revisit and cleanup the code
-
 ## Review Location caching method
 I think the way I'm doing this may be janky... I should review
 
 ## Debounce the color picker
 Chrome lets you slide the color picker all over and it ends up timing out because I'm updating webstorage way too fast.
 
-## Why doesn't "settings" work anymore?
-When clicking the app icon it used to open the sidebar, not anymore...
+## Why doesn't "settings" work when clicking it from within the page?
+
+## Fonts
+Trying to determine how to get a bunch of fonts in here. People are invariably going to want a bunch of weird ass fonts
+so it seems like having a mechanism where they could add their own might be nice. 
+
+As a compromise I could build in 10-20 fonts and let people pick. I'd need to pick a good set of variations.
+
+I could build in "pick your own" based on the google font API which gets way too many fonts...lots of work, not much 
+benefit, and the key is compromised just like the weather key.
+
