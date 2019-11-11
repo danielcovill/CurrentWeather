@@ -1,262 +1,273 @@
 @font-face {
-    font-family: "HelveticaNeueUltraLight";
-    src: url("../fonts/HelveticaNeue-UltraLight.otf") format("opentype");
-    font-weight: normal;
-    font-style: normal;
+	font-family: "HelveticaNeueUltraLight";
+	src: url("../fonts/HelveticaNeue-UltraLight.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
 }
 body {
-    font-family: "HelveticaNeueUltraLight";
-    font-weight: normal;
-    font-size: 16px;
-    height: 100vh;
-		overflow: hidden;
-		background: gray;
+	font-family: "HelveticaNeueUltraLight";
+	font-weight: normal;
+	height: 100vh;
+	overflow: hidden;
+	background: gray;
 }
 .content {
-    text-align: center;
-    padding-top: 8em;
+	text-align: center;
+	padding-top: 13vh;
+	font-size: 3vw;
+}
+@media (min-aspect-ratio: 3/1) {
+	.content{
+		font-size: 9vh;
+	}
 }
 #left-sidebar-toggle {
-    position: absolute;
-    top: 1em;
-    left: 1em;
+	position: absolute;
+	top: 2vh;
+	left: 2vh;
 }
 .menu-icon {
-    cursor: pointer;
-    width: 2.3em;
-    height: .3em;
-    border-radius: 3px;
-    background-color: #333;
-    margin: 22px 12px 12px 12px;
-    float: left;
-    position: relative;
+	cursor: pointer;
+	width: 2.5vw;
+	height: .35vw;
+	border-radius: .3vw;
+	background-color: #333;
+	margin: 1.7vw .75vw 1.7vw .75vw;
+	float: left;
+	position: relative;
 }
 .menu-icon::after,.menu-icon::before {
-    position: absolute;
-    left: 0;
-    content: '';
-    height: .3em;
-    width: 2.3em;
-    border-radius: 3px;
-    background-color: #333; 
+	position: absolute;
+	left: 0;
+	content: '';
+	height: .35vw;
+	width: 2.5vw;
+	border-radius: .3vw;
+	background-color: #333; 
 }
 .menu-icon::after {
-    top: .7em;
-    background-color: inherit;
+	top: .8vw;
+	background-color: inherit;
 }
 .menu-icon::before {
-    top: -.7em;
-    background-color: inherit;
+	top: -.75vw;
+	background-color: inherit;
 }
 .close-icon {
-    cursor: pointer;
-    width: 2em;
-    height: 2em;
-    margin: 12px;
-    float: right;
-    position: relative;
+	cursor: pointer;
+	width: 2em;
+	height: 2em;
+	float: right;
+	position: relative;
 }
 .close-icon::before, .close-icon::after {
-    position: absolute;
-    left: 0;
-    top: 1.5em;
-    content: '';
-    height: .3em;
-    width: 2em;
-    border-radius: 3px;
-    background-color: #333;
+	position: absolute;
+	right: 1em;
+	top: 1.5em;
+	content: '';
+	height: .3em;
+	width: 2em;
+	border-radius: .3em;
+	background-color: #333;
 }
 .close-icon:before {
-    transform: rotate(45deg);
+	transform: rotate(45deg);
 }
 .close-icon:after {
-    transform: rotate(-45deg);
+	transform: rotate(-45deg);
 }
 .time {
-    font-size: 10vw;
+	font-size: 3.3em;
 }
 .date {
-    font-size: 2vw;
+	font-size: .65em;
 }
 .coords {
-    display:none;
+	display:none;
 }
 /* settings */
 .left-sidebar {
-    color: #333;
-    position: absolute;
-    top: 0;
-    border-right: 1px solid #666;
-    height: 100vh;
-    width: 35em;
-    background-color: rgba(255,255,255,.8);
-    z-index: 10;
-    transition: left .3s;
-    overflow: scroll;
+	color: #333;
+	position: absolute;
+	top: 0;
+	border-right: 1px solid #666;
+	height: 100vh;
+	width: 22em;
+	background-color: rgba(255,255,255,.8);
+	z-index: 10;
+	transition: left .3s;
+	overflow: scroll;
+	font-size: 14px;
 }
 .left-sidebar form {
-    padding-bottom: 4em;
+	padding-bottom: 4em;
 }
 .left-sidebar.show {   
-    left: 0;
+	left: 0;
 }
 .left-sidebar.hide {
-    left: -35em;
+	left: -23em;
 }
 .pref {
-    margin: 0 12px;
+	margin: 0 1em;
 }
 .pref:first-child::before{
-    content: "";
-    display: block;
-    height: 1px;
-    margin: 2.5em 0;
-    width: 100%;
-    background: #000;
+	content: "";
+	display: block;
+	height: 1px;
+	margin: 1em 0;
+	width: 100%;
+	background: #000;
 }
 .pref:last-child::after {
-    display: none;
+	display: none;
 }
 .pref::after {
-    content: "";
-    display: block;
-    height: 1px;
-    margin: 2.5em 0;
-    width: 100%;
-    background: #000;
+	content: "";
+	display: block;
+	height: 1px;
+	margin: 1em 0;
+	width: 100%;
+	background: #000;
 }
 .header {
-    margin: 1em 0;
-    font-weight: bold;
-    font-size: 1em;
+	margin: .5em 0;
+	font-weight: bold;
+	font-size: 1.2em;
 }
 .pref label {
-    margin-right: 1em;
+	font-size: 1.2em;
 }
 input[type="text"] {
-    border: 2px solid #666;
-    padding: 4px 10px;
-    font-size: 1em;
-    border-radius: 10px;
+	border: 2px solid #666;
+	padding: 4px 10px;
+	font-size: 1em;
+	border-radius: 10px;
 }
 input[type="radio"] {
-    height: 1.1em;
-    width: 1.1em;
+	height: 1.1em;
+	width: 1.1em;
 }
 .pref input[type=color] {
-    height: 3em;
-    width: 12em;
+	height: 3em;
+	width: 12em;
 }
 .title {
-    margin: .5em 12px;
-    font-weight: bold;
-    font-size: 2.5em;
+	margin: .5em .5em;
+	font-weight: bold;
+	font-size: 2em;
 }
 .note {
-    font-size: .8em;
-    margin: .5em .2em;
+	font-size: .8em;
+	margin: .25em .4em;
+}
+#bgColors {
+	margin: 1em 0;
 }
 /* Weather */
+
 .weather {
-    padding: 1.5em 1vw 2em 1vw;
-    margin: 1em 0;
+	margin: 1em 0;
 }
 .weather .forecast {
-    justify-content: space-evenly;
-    padding: 0 7vw;
-    display: flex;
+	justify-content: space-around;
+	display: flex;
+	flex-wrap: nowrap;
+	margin: 0 auto;
+	max-width: 70vw;
 }
 .content .weather .forecast .day {
-    font-size: 2vw;
-    transition: opacity 1s;
+	font-size: .65em;
+	transition: opacity 1s;
 }
 .content .weather .forecast .day.hide {
-    opacity: 0;
+	opacity: 0;
 }
 .content .weather .forecast .day:nth-of-type(1).show {
-    opacity: 1;
+	opacity: 1;
 }
 .content .weather .forecast .day:nth-of-type(2).show {
-    transition-delay: .1s;
-    opacity: 1;
+	transition-delay: .1s;
+	opacity: 1;
 }
 .content .weather .forecast .day:nth-of-type(3).show {
-    transition-delay: .2s;
-    opacity: 1;
+	transition-delay: .2s;
+	opacity: 1;
 }
 .content .weather .forecast .day:nth-of-type(4).show {
-    transition-delay: .3s;
-    opacity: 1;
+	transition-delay: .3s;
+	opacity: 1;
 }
 .content .weather .forecast .day:nth-of-type(5).show {
-    transition-delay: .4s;
-    opacity: 1;
+	transition-delay: .4s;
+	opacity: 1;
 }
 .weather .forecast .day .mintemp::after {
-    content: "\00B0";
+	content: "\00B0";
 }
 .weather .forecast .day .maxtemp::after {
-    white-space: pre;
-    content: "\00B0  /";
+	white-space: pre;
+	content: "\00B0  /";
 }
 .currentTemp {
-    margin-top: .5em;
+	margin-top: 1vh;
+	font-size: .5em;
 }
 .currentTempLoaded::after {
-    content: "\00B0";
+	content: "\00B0";
 }
 .content .weather .forecast .day .wi {
-    font-size: 4vw;
-    margin-bottom: .2em;
+	font-size: 2em;
+	margin-bottom: .2em;
 }
 .content .location {
-    margin-top: 1vw;
-    font-size: 2vw;
-    transition: opacity 1s;
+	margin-top: 1vh;
+	font-size: .7em;
+	transition: opacity 1s;
 }
 .content .location.hide {
-    opacity: 0;
+	opacity: 0;
 }
 .content .location.show {
-    transition-delay: .5s;
-    opacity: 1;
+	transition-delay: .5s;
+	opacity: 1;
 }
 /* Loading Icon */
 .loading {
-    opacity: 0;
+	opacity: 0;
 }
 .loading-bar {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin: 0 .2em;
-  border-radius: 1em;
-  animation: loading 1s ease-in-out infinite;
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	margin: 0 .2em;
+	border-radius: 1em;
+	animation: loading 1s ease-in-out infinite;
 }
 .loading-bar:nth-child(1) {
-  animation-delay: 0s;
+	animation-delay: 0s;
 }
 .loading-bar:nth-child(2) {
-  animation-delay: .1s;
+	animation-delay: .1s;
 }
 .loading-bar:nth-child(3) {
-  animation-delay: .2s;
+	animation-delay: .2s;
 }
 .loading-bar:nth-child(4) {
-  animation-delay: .3s;
+	animation-delay: .3s;
 }
 .loading-bar:nth-child(5) {
-  animation-delay: .4s;
+	animation-delay: .4s;
 }
 
 @keyframes loading {
-  0% {
-    transform: scale(1);
-  }
-  10% {
-    transform: scale(1, 3);
-  }
-  40% {
-    transform: scale(1);
-  }
+0% {
+	transform: scale(1);
+}
+10% {
+	transform: scale(1, 3);
+}
+40% {
+	transform: scale(1);
+}
 }
