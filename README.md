@@ -33,3 +33,6 @@ Add cookie based "initialized" setting allowing for faster load
 ## 1.0.11
 Clicking off the sidebar now closes it (you don't have to hit the X unless you want to)
 Fix issue where users were still losing their preferences
+## 1.0.12
+Cache weather responses for 1 hour so weather source doesn't cut us all off :)
+Updated CSS so the browser can shrink in more weird ways before losing data
