@@ -31,6 +31,9 @@
 		"message": "Setting does not exist.",
 		"description": "There was an attempt to change a setting that shouldn't exist."
 	},
+	"loading": {
+		"message": "Loading"
+	},
 	"current": {
 		"message": "Current"
 	},
@@ -42,6 +45,9 @@
 	},
 	"preferences": {
 		"message": "Preferences"
+	},
+	"font_display": {
+		"message": "Font"
 	},
 	"hours_display": {
 		"message": "Hours Display"
@@ -66,6 +72,9 @@
 	},
 	"auto_detect": {
 		"message": "auto-detect"
+	},
+	"font_instructions": {
+		"message": "Select a font or leave blank for the default font"
 	},
 	"location_instructions": {
 		"message": "Enter zip code or leave blank to detect automatically"
@@ -98,9 +107,9 @@
 		"message": "Secondary Font Color"
 	},
 	"auto": {
-		"message": "auto"
+		"message": "Auto"
 	},
 	"manual": {
-		"message": "manual"
+		"message": "Manual"
 	}
 }

@@ -2,130 +2,155 @@
 <html>
 
 <head>
-    <script src="localize.js" defer></script>
-    <script type="module" src="app.js" defer></script>
-    <link href="app.css" rel="stylesheet">
-    <link href="weather-icons.css" rel="stylesheet" type="text/css">
+	<link id="fontDownload" rel="stylesheet" href="">
+	<script src="localize.js" defer></script>
+	<script type="module" src="app.js" defer></script>
+	<link href="app.css" rel="stylesheet">
+	<link href="weather-icons.css" rel="stylesheet" type="text/css">
 </head>
 
+
 <body class="primaryColor">
-    <div class="errorMessage"></div>
-    <a id="left-sidebar-toggle" href="#settings" >
-        <div class="menu-icon"></div>
-    </a>
+	<div class="errorMessage"></div>
+	<a id="left-sidebar-toggle" href="#settings">
+		<div class="menu-icon"></div>
+	</a>
 
-    <div class="left-sidebar hide">
-        <a id="left-sidebar-close" href="#" class="close-icon">
-        </a>
-        <div class="title" data-localize="preferences"></div>
-        <form id="settingsForm">
-            <div class="pref clockVersion">
-                <div class="header" data-localize="hours_display"></div>
-                <input type="radio" name="hour" id="hourRadio12" value="12" />
-                <label for="hourRadio12" data-localize="12_hour"></label>
-                <input type="radio" name="hour" id="hourRadio24" value="24" />
-                <label for="hourRadio24" data-localize="24_hour"></label>
-            </div>
-            <div class="pref seconds">
-                <div class="header" data-localize="seconds_display"></div>
-                <input type="radio" name="seconds" id="secondsRadioOn" value="on" />
-                <label for="secondsRadioOn" data-localize="show"></label>
-                <input type="radio" name="seconds" id="secondsRadioOff" value="off" />
-                <label for="secondsRadioOff" data-localize="hide"></label>
-            </div>
-            <div class="pref location">
-                <div class="header" data-localize="location"></div>
-                <input type="text" name="zip" id="zipInput" value="" data-localize-value="auto_detect" data-localize-field="placeholder" />
-                <div class="note" data-localize="location_instructions"></div>
-            </div>
-            <div class="pref units">
-                <div class="header" data-localize="temperature_units"></div>
-                <input type="radio" name="units" id="unitsRadioImperial" value="imperial" />
-                <label for="unitsRadioImperial" data-localize="imperial_temp"></label>
-                <input type="radio" name="units" id="unitsRadioMetric" value="metric" />
-                <label for="unitsRadioMetric" data-localize="metric_temp"></label>
-            </div>
-            <div class="pref colors">
-                <div class="header" data-localize="background"></div>
-                <input type="radio" name="background" id="autoBgTod" value="tod" />
-                <label for="autoBgTod" data-localize="time_of_day" data-localize="time_of_day"></label>
-                <input type="radio" name="background" id="autoBgManual" value="manual" />
-                <label for="autoBgManual" data-localize="manual"></label>
-                <div id="bgColors">
-                    <div class="header" data-localize="background_color"></div>
-                    <input type="color" name="bgColor" id="bgColorPicker" value="#ffffff">
-                </div>
-                <div class="header" data-localize="font_colors"></div>
-                <input type="radio" name="autofontcolor" id="autoFontOn" value="on" />
-                <label for="autoFontOn" data-localize="auto"></label>
-                <input type="radio" name="autofontcolor" id="autoFontOff" value="off" />
-                <label for="autoFontOff" data-localize="manual"></label>
-                <div id="fontColors">
-                    <div class="header" data-localize="primary_font_color"></div>
-                    <input type="color" name="pfColor" id="pfColorPicker" value="#ffffff">
-                    <div class="header" data-localize="secondary_font_color"></div>
-                    <input type="color" name="sfColor" id="sfColorPicker" value="#ffffff">
-                </div>
-            </div>
-        </form>
-    </div>
+	<div class="left-sidebar hide">
+		<a id="left-sidebar-close" href="#" class="close-icon">
+		</a>
+		<div class="title" data-localize="preferences"></div>
+		<form id="settingsForm">
+			<div class="pref fontSelection">
+				<div class="header" data-localize="font_display"></div>
+				<input type="text" list="fontPickerList" autocomplete="off" name="font" id="fontPicker">
+				<datalist id="fontPickerList"></datalist>
+				<div id="fontLoading" class="loading-container">
+					<div class="loading-bar"></div>
+					<div class="loading-bar"></div>
+					<div class="loading-bar"></div>
+					<div class="loading-bar"></div>
+					<div class="loading-bar"></div>
+				</div>
+				<div class="note" data-localize="font_instructions"></div>
+			</div>
+			<div class="pref clockVersion">
+				<div class="header" data-localize="hours_display"></div>
+				<input type="radio" name="hour" id="hourRadio12" value="12" />
+				<label for="hourRadio12" data-localize="12_hour"></label>
+				<input type="radio" name="hour" id="hourRadio24" value="24" />
+				<label for="hourRadio24" data-localize="24_hour"></label>
+			</div>
+			<div class="pref seconds">
+				<div class="header" data-localize="seconds_display"></div>
+				<input type="radio" name="seconds" id="secondsRadioOn" value="on" />
+				<label for="secondsRadioOn" data-localize="show"></label>
+				<input type="radio" name="seconds" id="secondsRadioOff" value="off" />
+				<label for="secondsRadioOff" data-localize="hide"></label>
+			</div>
+			<div class="pref location">
+				<div class="header" data-localize="location"></div>
+				<input type="text" name="zip" id="zipInput" value="" data-localize-value="auto_detect"
+					data-localize-field="placeholder" />
+				<div class="note" data-localize="location_instructions"></div>
+			</div>
+			<div class="pref units">
+				<div class="header" data-localize="temperature_units"></div>
+				<input type="radio" name="units" id="unitsRadioImperial" value="imperial" />
+				<label for="unitsRadioImperial" data-localize="imperial_temp"></label>
+				<input type="radio" name="units" id="unitsRadioMetric" value="metric" />
+				<label for="unitsRadioMetric" data-localize="metric_temp"></label>
+			</div>
+			<div class="pref colors">
+				<div class="header" data-localize="background"></div>
+				<input type="radio" name="background" id="autoBgTod" value="tod" />
+				<label for="autoBgTod" data-localize="time_of_day" data-localize="time_of_day"></label>
+				<input type="radio" name="background" id="autoBgManual" value="manual" />
+				<label for="autoBgManual" data-localize="manual"></label>
+				<div id="bgColors">
+					<div class="header" data-localize="background_color"></div>
+					<input type="color" name="bgColor" id="bgColorPicker" value="#ffffff">
+				</div>
+				<div class="header" data-localize="font_colors"></div>
+				<input type="radio" name="autofontcolor" id="autoFontOn" value="on" />
+				<label for="autoFontOn" data-localize="auto"></label>
+				<input type="radio" name="autofontcolor" id="autoFontOff" value="off" />
+				<label for="autoFontOff" data-localize="manual"></label>
+				<div id="fontColors">
+					<div class="header" data-localize="primary_font_color"></div>
+					<input type="color" name="pfColor" id="pfColorPicker" value="#ffffff">
+					<div class="header" data-localize="secondary_font_color"></div>
+					<input type="color" name="sfColor" id="sfColorPicker" value="#ffffff">
+				</div>
+			</div>
+		</form>
+	</div>
 
-    <div id="primary-content" class="content">
-        <div class="time">
-            <span class="hour"></span>
-            <span class="minute"></span>
-            <span class="second"></span>
-            <span class="am-pm"></span>
-        </div>
-        <div class="date"></div>
-        <div class="currentTemp"></div>
-        <div class="weather">
-            <div class="forecast">
-                <div class="day hide">
-                    <i class="wi"></i>
-                    <div class="temp">
-                        <span class="maxtemp"></span>
-                        <span class="mintemp secondaryColor"></span>
-                    </div>
-                    <div class="dayName"></div>
-                </div>
-                <div class="day hide">
-                    <i class="wi"></i>
-                    <div class="temp">
-                        <span class="maxtemp"></span>
-                        <span class="mintemp secondaryColor"></span>
-                    </div>
-                    <div class="dayName"></div>
-                </div>
-                <div class="day hide">
-                    <i class="wi"></i>
-                    <div class="temp">
-                        <span class="maxtemp"></span>
-                        <span class="mintemp secondaryColor"></span>
-                    </div>
-                    <div class="dayName"></div>
-                </div>
-                <div class="day hide">
-                    <i class="wi"></i>
-                    <div class="temp">
-                        <span class="maxtemp"></span>
-                        <span class="mintemp secondaryColor"></span>
-                    </div>
-                    <div class="dayName"></div>
-                </div>
-                <div class="day hide">
-                    <i class="wi"></i>
-                    <div class="temp">
-                        <span class="maxtemp"></span>
-                        <span class="mintemp secondaryColor"></span>
-                    </div>
-                    <div class="dayName"></div>
-                </div>
-            </div>
-        </div>
-        <div class="location hide">
-        </div>
-    </div>
+	<div id="primary-content" class="content">
+		<div class="time">
+			<span class="hour"></span>
+			<span class="minute"></span>
+			<span class="second"></span>
+			<span class="am-pm"></span>
+		</div>
+		<div class="date"></div>
+		<div class="currentTemp"></div>
+		<div class="weather">
+
+			<div class="forecast">
+				<div class="day hide">
+					<i class="wi"></i>
+					<div class="temp">
+						<span class="maxtemp"></span>
+						<span class="mintemp secondaryColor"></span>
+					</div>
+					<div class="dayName"></div>
+				</div>
+				<div class="day hide">
+					<i class="wi"></i>
+					<div class="temp">
+						<span class="maxtemp"></span>
+						<span class="mintemp secondaryColor"></span>
+					</div>
+					<div class="dayName"></div>
+				</div>
+				<div class="day hide">
+					<i class="wi"></i>
+					<div class="temp">
+						<span class="maxtemp"></span>
+						<span class="mintemp secondaryColor"></span>
+					</div>
+					<div class="dayName"></div>
+				</div>
+				<div class="day hide">
+					<i class="wi"></i>
+					<div class="temp">
+						<span class="maxtemp"></span>
+						<span class="mintemp secondaryColor"></span>
+					</div>
+					<div class="dayName"></div>
+				</div>
+				<div class="day hide">
+					<i class="wi"></i>
+					<div class="temp">
+						<span class="maxtemp"></span>
+						<span class="mintemp secondaryColor"></span>
+					</div>
+					<div class="dayName"></div>
+				</div>
+			</div>
+		</div>
+		<div id="weatherLoading" class="loading-container">
+			<div class="loading-bar"></div>
+			<div class="loading-bar"></div>
+			<div class="loading-bar"></div>
+			<div class="loading-bar"></div>
+			<div class="loading-bar"></div>
+		</div>
+		<div class="location hide">
+		</div>
+	</div>
 
 </body>
+
 </html>

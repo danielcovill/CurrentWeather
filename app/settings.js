@@ -50,8 +50,6 @@ class Settings {
 		return `linear-gradient(0deg, hsl(${h1}, 100%, ${l1}%) 0%, hsl(${h2}, 100%, ${l2}%) 100%)`;
 	}
 
-
-	//rather than using the initialized field, I think what I'm going to do is just manually check all the settings
 	static async SetDefaultUserSettings(forceReset) {
 		let settingsResult = await new Promise((resolve) => {
 			chrome.storage.sync.get([
@@ -63,7 +61,8 @@ class Settings {
 				'primaryFontColor',
 				'secondaryFontColor',
 				'showSeconds',
-				'units'
+				'units',
+				'font'
 			], (result) => {
 				resolve(result);
 			});
@@ -144,6 +143,15 @@ class Settings {
 			new Promise((resolve) => {
 				if(forceReset || settingsResult.units === undefined) {
 					chrome.storage.sync.set({ units: 'metric' }, () => {
+						resolve();
+					});
+				} else {
+					resolve();
+				}
+			}),
+			new Promise((resolve) => {
+				if(forceReset || settingsResult.font === undefined) {
+					chrome.storage.sync.set({ font: '' }, () => {
 						resolve();
 					});
 				} else {
@@ -282,6 +290,13 @@ class Settings {
 					});
 				});
 				break;
+			case "font":
+				settingPromise = new Promise((resolve) => {
+					chrome.storage.sync.set({ font: value }, () => {
+						resolve();
+					});
+				});
+				break;
 			default:
 				settingPromise = Promise.reject("error_invalid_setting");
 				break;
@@ -339,6 +354,7 @@ class Settings {
 		}
 		return averageLumocity <= .5;
 	}
+
 	static hslToRgb(h, s, l) {
 		let r, g, b;
 		if (s == 0) {

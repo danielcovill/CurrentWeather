@@ -18,7 +18,9 @@ class Weather {
 			chrome.storage.local.get(['weatherCache'], (result) => {
 				// 60min * 60sec * 1000ms = 3600000 = older than 1hr
 				// 60sec * 1000ms = 60000 = older than 1min
-				let dataIsStale = Object.entries(result).length === 0 || result.weatherCache.date < new Date().getTime() - 3600000;
+				let dataIsStale = Object.entries(result).length === 0 
+					|| result.weatherCache.weather[0] === null 
+					|| result.weatherCache.date < new Date().getTime() - 3600000;
 				if (dataIsStale || forceRefresh) {
 					if (storageResult.location == "" && !storageResult.coords) {
 						reject("No Location Data");
@@ -39,7 +41,7 @@ class Weather {
 				} else {
 					//get the data from the local storage and send it back 
 					chrome.storage.local.get(["weatherCache"], (result) => {
-						if (Object.entries(result).length === 0) {
+						if (Object.entries(result).length === 0 || result.weatherCache.weather[0] === null) {
 							reject("No local weather cache");
 						} else {
 							let weatherDays = [];

@@ -5,7 +5,7 @@ document.querySelectorAll('[data-localize-field]').forEach(element => {
 	if (!!message) {
 		element.setAttribute(fieldToLocalize, message);
 	} else {
-		console.error("Translation error");
+		console.error(`Translation error: ${contentId}`);
 	}
 });
 // This way is redundant, but makes the HTML cleaner because it's what I'm doing most of the time
@@ -15,6 +15,6 @@ document.querySelectorAll('[data-localize]').forEach(element => {
 	if (!!message) {
 		element.innerHTML = message;
 	} else {
-		console.error("Translation error");
+		console.error(`Translation error: ${contentId}`);
 	}
 });

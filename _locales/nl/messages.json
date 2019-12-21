@@ -31,6 +31,9 @@
 		"message": "Instelling bestaat niet.",
 		"description": "Er is een poging gedaan om een ​​instelling te wijzigen die niet zou moeten bestaan."
 	},
+	"loading": {
+		"message": "het laden"
+	},
 	"current": {
 		"message": "Actueel"
 	},
@@ -42,6 +45,9 @@
 	},
 	"preferences": {
 		"message": "Voorkeuren"
+	},
+	"font_display": {
+		"message": "doopvont"
 	},
 	"hours_display": {
 		"message": "Uren Weergave"
@@ -66,6 +72,9 @@
 	},
 	"auto_detect": {
 		"message": "Automatische detectie"
+	},
+	"font_instructions": {
+		"message": "Selecteer een lettertype of laat dit leeg als standaardlettertype"
 	},
 	"location_instructions": {
 		"message": "Voer postcode in of laat leeg om automatisch te detecteren"

@@ -2,8 +2,9 @@ import OpenWeatherMap from "./owm-weather.js";
 import Weather from "./weather.js";
 import Settings from "./settings.js";
 const weather = new Weather(OpenWeatherMap);
+let fontOptions = [];
 
-document.getElementById("left-sidebar-toggle").addEventListener("click", () => {
+document.getElementById("left-sidebar-toggle").addEventListener("click", async () => {
 	toggleLeftSidebar(true);
 });
 document.getElementById("left-sidebar-close").addEventListener("click", () => {
@@ -51,16 +52,19 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 				console.log("Can not refresh data: " + err)
 			}
 			break;
+		case "font":
+			await updateFont();
+			break;
 		default:
 			break;
 	}
 });
 
 initializeApplication();
-
 async function initializeApplication() {
 	await Settings.SetDefaultUserSettings(false);
 	await refreshColors();
+	await updateFont();
 	refreshTime();
 	refreshDate();
 	setInterval(refreshTime, 1000);
@@ -72,6 +76,10 @@ async function initializeApplication() {
 	let weatherData = await weather.getWeather()
 	.catch((err) => {
 		if (err === "No Location Data") {
+			//this is here because chrome now requires interaction before you grab location
+			//on first run they've never interacted so we show the side bar so they'll at least
+			//have to close it (our interaction) allowing us to grab coords and update weather info
+			document.getElementById("weatherLoading").classList.add("loading");
 			toggleLeftSidebar(true);
 		}
 	});
@@ -85,6 +93,23 @@ async function initializeApplication() {
 		refreshSettingsPane(),
 		refreshColors()
 	]);
+}
+
+async function updateFont() {
+
+
+	const fontResult = await new Promise((resolve) => {
+		chrome.storage.sync.get(['font'], (result) => {
+			resolve(result);
+		});
+	});
+
+	if(!fontResult.font) {
+		document.body.style.fontFamily = "HelveticaNeueUltraLight";
+	} else {
+		document.getElementById("fontDownload").href = `https://fonts.googleapis.com/css2?family=${fontResult.font.replace(/ /g, '+')}`;
+		document.body.style.fontFamily = fontResult.font;
+	}
 }
 
 async function updateSolarMovement(weather) {
@@ -118,7 +143,7 @@ async function refreshColors() {
 
 	let primaryColorNodes = document.getElementsByClassName('primaryColor');
 	let secondaryColorNodes = document.getElementsByClassName('secondaryColor');
-	let menuIcons = document.getElementsByClassName("menu-icon");
+	let icons = document.querySelectorAll('.menu-icon, #weatherLoading .loading-bar');
 	let primaryColor;
 	let secondaryColor;
 
@@ -141,8 +166,8 @@ async function refreshColors() {
 	for (let i = 0; i < secondaryColorNodes.length; i++) {
 		secondaryColorNodes[i].style.color = secondaryColor;
 	}
-	for (let i = 0; i < menuIcons.length; i++) {
-		menuIcons[i].style.backgroundColor = primaryColor;
+	for (let i = 0; i < icons.length; i++) {
+		icons[i].style.backgroundColor = primaryColor;
 	}
 }
 
@@ -204,20 +229,46 @@ async function refreshTime() {
 
 async function toggleLeftSidebar(showSidebar) {
 	if (showSidebar) {
+		document.getElementById("fontPicker").style.display = "none";
+		document.getElementById("fontLoading").classList.add("loading");
 		document.querySelector(".menu-icon").style.visibility = "hidden";
 		document.querySelector(".left-sidebar").classList.remove("hide");
 		document.querySelector(".left-sidebar").classList.add("show");
+		//load font options datalist
+		if(fontOptions.length === 0) {
+			const response = await fetch('https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyC5yzJ5rXCvKU2VgjGdbdlUHIvIHoTuPNw');
+			fontOptions = (await response.json()).items.map(a => a.family);
+			let fontPickerList = document.getElementById('fontPickerList');
+			fontOptions.forEach(fontOption => {
+				let option = document.createElement('option');
+				option.value = fontOption;
+				fontPickerList.appendChild(option);
+			});
+		} 
+		document.getElementById("fontLoading").classList.remove("loading");
+		document.getElementById("fontPicker").style.display = "block";
 	} else {
+		location.hash = "";
 		document.querySelector(".left-sidebar").classList.remove("show");
 		document.querySelector(".left-sidebar").classList.add("hide");
 		document.querySelector(".menu-icon").style.visibility = "visible";
-		await Settings.refreshCoordinates();
+		//TODO: check if we have coordinates already, if we don't show the loader and refresh
+		const coordsResult = await new Promise((resolve) => {
+			chrome.storage.sync.get(['coords'], (result) => {
+				resolve(result);
+			});
+		});
+		if(!coordsResult.coords) {
+			await Settings.refreshCoordinates();
+		}
 		try {
 			let weatherData = await weather.getWeather(true);
 			await updateSolarMovement(weatherData);
 			refreshWeather(weatherData);
 		} catch (err) {
 			console.log("Can not refresh data: " + err)
+		} finally {
+			document.getElementById("weatherLoading").classList.remove("loading");
 		}
 	}
 }
@@ -233,7 +284,8 @@ async function refreshSettingsPane() {
 			'primaryFontColor',
 			'secondaryFontColor',
 			'showSeconds',
-			'units'
+			'units',
+			'font'
 		], (result) => {
 			resolve(result);
 		});
@@ -289,4 +341,5 @@ async function refreshSettingsPane() {
 	document.getElementById("bgColorPicker").setAttribute("value", settingsResult.backgroundColor);
 	document.getElementById("pfColorPicker").setAttribute("value", settingsResult.primaryFontColor);
 	document.getElementById("sfColorPicker").setAttribute("value", settingsResult.secondaryFontColor);
+	document.getElementById("fontPicker").setAttribute("value", settingsResult.font);
 }

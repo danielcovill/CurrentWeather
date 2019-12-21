@@ -5,7 +5,6 @@
 	font-style: normal;
 }
 body {
-	font-family: "HelveticaNeueUltraLight";
 	font-weight: normal;
 	height: 100vh;
 	overflow: hidden;
@@ -232,16 +231,30 @@ input[type="radio"] {
 	transition-delay: .5s;
 	opacity: 1;
 }
-/* Loading Icon */
-.loading {
-	opacity: 0;
+/* Font Loader */
+#fontLoading {
+	font-size: 7px;
+	margin: 15px 0;
+	width: 150px;
+}
+#weatherLoading {
+	font-size: .5em;
+}
+/* Loading Icons */
+.loading-container:not(.loading) {
+	display: none;
+}
+.loading-container.loading {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;;
 }
 .loading-bar {
-	display: inline-block;
 	width: 1em;
 	height: 1em;
-	margin: 0 .2em;
-	border-radius: 1em;
+	margin: .2em .2em;
+	border-radius: .5em;
+	background-color: #333;
 	animation: loading 1s ease-in-out infinite;
 }
 .loading-bar:nth-child(1) {
@@ -261,13 +274,13 @@ input[type="radio"] {
 }
 
 @keyframes loading {
-0% {
-	transform: scale(1);
-}
-10% {
-	transform: scale(1, 3);
-}
-40% {
-	transform: scale(1);
-}
+	0% {
+		transform: scale(1);
+	}
+	10% {
+		transform: scale(1, 3);
+	}
+	40% {
+		transform: scale(1);
+	}
 }
