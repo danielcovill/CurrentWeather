@@ -36,3 +36,6 @@ Fix issue where users were still losing their preferences
 ## 1.0.12
 Cache weather responses for 1 hour so weather source doesn't cut us all off :)
 Updated CSS so the browser can shrink in more weird ways before losing data
+## 1.1.0
+Added font picker
+Cleaned up location and weather reporting mechanisms
