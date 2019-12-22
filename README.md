@@ -39,3 +39,6 @@ Updated CSS so the browser can shrink in more weird ways before losing data
 ## 1.1.0
 Added font picker
 Cleaned up location and weather reporting mechanisms
+
+## 1.1.1
+Added notification of changes
