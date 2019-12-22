@@ -40,4 +40,5 @@ function clean(cb) {
 }
 
 exports.clean = clean;
+exports.minifyCSS = minifyCss;
 exports.default = series(parallel(minifyCss, minifyJs, copyUnmodifiedFiles), zipResults, clean); 
