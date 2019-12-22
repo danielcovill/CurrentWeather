@@ -63,8 +63,11 @@ document.getElementById("settingsForm").addEventListener("change", async (event)
 initializeApplication();
 async function initializeApplication() {
 	await Settings.SetDefaultUserSettings(false);
-	await refreshColors();
-	await updateFont();
+	await Promise.all([
+		refreshColors(),
+		updateFont(),
+		setNotesAlert()
+	]);
 	refreshTime();
 	refreshDate();
 	setInterval(refreshTime, 1000);
@@ -88,7 +91,8 @@ async function initializeApplication() {
 		refreshWeather(weatherData);
 	}
 
-	// Set up UI and refresh necessary UI elements
+	// Set up UI and refresh necessary UI elements. Colors get refreshed in case the weather
+	// update changed time of day color stuff
 	await Promise.all([
 		refreshSettingsPane(),
 		refreshColors()
@@ -109,6 +113,17 @@ async function updateFont() {
 	} else {
 		document.getElementById("fontDownload").href = `https://fonts.googleapis.com/css2?family=${fontResult.font.replace(/ /g, '+')}`;
 		document.body.style.fontFamily = fontResult.font;
+	}
+}
+
+async function setNotesAlert() {
+	const notesVersion = await new Promise((resolve) => {
+		chrome.storage.sync.get(['appNotesVersion'], (result) => {
+			resolve(result.appNotesVersion);
+		});
+	});
+	if(notesVersion !== chrome.runtime.getManifest().version) {
+		document.getElementById('left-sidebar-toggle').classList.add('blink');
 	}
 }
 
@@ -229,11 +244,17 @@ async function refreshTime() {
 
 async function toggleLeftSidebar(showSidebar) {
 	if (showSidebar) {
+		//set the font picker up for loading
 		document.getElementById("fontPicker").style.display = "none";
 		document.getElementById("fontLoading").classList.add("loading");
+		//show/hide the necessary controls
 		document.querySelector(".menu-icon").style.visibility = "hidden";
 		document.querySelector(".left-sidebar").classList.remove("hide");
 		document.querySelector(".left-sidebar").classList.add("show");
+		//highlight new settings if we're in "new settings" mode
+		if(document.getElementById("left-sidebar-toggle").classList.contains("blink")) {
+			document.getElementsByClassName("fontSelection")[0].classList.add("new");
+		}
 		//load font options datalist
 		if(fontOptions.length === 0) {
 			const response = await fetch('https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyC5yzJ5rXCvKU2VgjGdbdlUHIvIHoTuPNw');
@@ -245,14 +266,22 @@ async function toggleLeftSidebar(showSidebar) {
 				fontPickerList.appendChild(option);
 			});
 		} 
+		//once things are loaded, bring the font picker back
 		document.getElementById("fontLoading").classList.remove("loading");
 		document.getElementById("fontPicker").style.display = "block";
 	} else {
+		//pull the hash so refreshing won't keep opening settings
 		location.hash = "";
+		//update the version setting to keep from repeatedly saying "new version"
+		await Settings.setUserSetting("appNotesVersion", chrome.runtime.getManifest().version);
+		//stop the new version animations
+		document.getElementById('left-sidebar-toggle').classList.remove('blink');
+		document.getElementsByClassName("fontSelection")[0].classList.remove("new");
+		//hide the sidebar
 		document.querySelector(".left-sidebar").classList.remove("show");
 		document.querySelector(".left-sidebar").classList.add("hide");
 		document.querySelector(".menu-icon").style.visibility = "visible";
-		//TODO: check if we have coordinates already, if we don't show the loader and refresh
+		//update user coordinates from user settings and if they don't have any, request from browser
 		const coordsResult = await new Promise((resolve) => {
 			chrome.storage.sync.get(['coords'], (result) => {
 				resolve(result);
@@ -261,12 +290,13 @@ async function toggleLeftSidebar(showSidebar) {
 		if(!coordsResult.coords) {
 			await Settings.refreshCoordinates();
 		}
+		//refresh weather data
 		try {
 			let weatherData = await weather.getWeather(true);
 			await updateSolarMovement(weatherData);
 			refreshWeather(weatherData);
 		} catch (err) {
-			console.log("Can not refresh data: " + err)
+			console.error("Can not refresh data: " + err)
 		} finally {
 			document.getElementById("weatherLoading").classList.remove("loading");
 		}

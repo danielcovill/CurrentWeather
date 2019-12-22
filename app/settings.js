@@ -53,6 +53,7 @@ class Settings {
 	static async SetDefaultUserSettings(forceReset) {
 		let settingsResult = await new Promise((resolve) => {
 			chrome.storage.sync.get([
+				'appNotesVersion',
 				'clockVersion',
 				'location',
 				'background',
@@ -68,6 +69,15 @@ class Settings {
 			});
 		});
 		return Promise.all([
+			new Promise((resolve) => {
+				if(forceReset || settingsResult.appNotesVersion === undefined) {
+					chrome.storage.sync.set({ appNotesVersion: chrome.runtime.getManifest().version }, () => {
+						resolve();
+					});
+				} else {
+					resolve();
+				}
+			}),
 			new Promise((resolve) => {
 				if(forceReset || settingsResult.clockVersion === undefined) {
 					chrome.storage.sync.set({ clockVersion: '12' }, () => {
@@ -198,6 +208,13 @@ class Settings {
 	static async setUserSetting(setting, value) {
 		let settingPromise;
 		switch (setting) {
+			case "appNotesVersion":
+				settingPromise = new Promise((resolve, reject) => {
+						chrome.storage.sync.set({ appNotesVersion: value }, () => {
+							resolve();
+						});
+				});
+				break;
 			case "hour":
 				settingPromise = new Promise((resolve, reject) => {
 					if (value == 12 || value == 24) {
